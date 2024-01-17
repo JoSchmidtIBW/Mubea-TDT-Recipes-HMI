@@ -6,7 +6,7 @@ Damit nicht mehr angerufen wird, zum "neue Programm machet"...
 
 ## von Matthias Trudewind und John Schmidt
 
-### Okt. 2023 --> Januar 2024
+### Okt. 2023 --> Januar 2024 --> Ziel Fertigstellung Erstes Quartal 2024
 
 Git Repository zum Proujekt "Mubea-TDT-Recipes-HMI"
 
