@@ -1,0 +1,129 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+    li(class=`${active ? 'side-nav--active' : ''}`)
+        a(href=`${link}`)
+            svg
+                use(xlink:href=`/img/icons.svg#icon-${icon}`)
+            | #{text}
+
+block content
+    main.main
+        .user-view
+            nav.user-view__menu
+
+                ul.side-nav
+                    +navItem('/api/v1/me', 'My Settings', 'settings', false)
+                
+                - if(user.role === 'admin' || user.role === 'Chef')
+                    .admin-nav
+                        h5.admin-nav__heading CHEF
+                        ul.side-nav
+                            +navItem('/api/v1/txt_xml_fileuploader', 'txt-xml-Drag-&-Drop', 'file-plus', false)                    
+
+                - if(user.role === 'admin' || user.role === 'Chef')
+                    .admin-nav
+                        h5.admin-nav__heading= `${user.role}`
+                        ul.side-nav
+                            +navItem('/api/v1/manage_users', 'Manage users', 'users', true)
+
+            .user-view__content1
+                .user-view__form-container1
+                    div(class="user-view__content")
+                        div(class="user-view__form-container")
+                            h1(style="color: red;") BY ADMIN
+                            br
+                            h2.heading-secondary.ma-bt-md= `Edit User: ${data.userToUpdate.firstName} ${data.userToUpdate.lastName}`
+                            form.form.form-workerAdmin-data
+                                div(class="form__group ma-bt-md")
+                                    input#userId(class="form__input", type="hidden", value=data.userToUpdate._id, readonly, style="background-color: lightgrey;")
+                                div(class="form__group")
+                                    label(class="form__label", for="employeeNumber") Employee Number
+                                    input#employeeNumber(class="form__input", type="number", value=data.userToUpdate.employeeNumber, readonly, style="background-color: lightgrey;")
+                                div(class="form__group")
+                                    label(class="form__label", for="firstname") Firstname
+                                    input#firstname(class="form__input", type="text", value=data.userToUpdate.firstName)
+                                div(class="form__group")
+                                    label(class="form__label", for="lastname") Lastname
+                                    input#lastname(class="form__input", type="text", value=data.userToUpdate.lastName)
+                                div(class="form__group")
+                                    label(class="form__label", for="birthDate") Birth date
+                                    input#birthDate(class="form__input", type="text", value=data.userToUpdate.birthDate, pattern="^(0[1-9]|[1-2][0-9]|3[0-1])[.](0[1-9]|1[0-2])[.][0-9]{4}$")
+                                div(class="form__group")
+                                    label(class="form__label", for="gender") Gender
+                                    select#gender(class="form__input")
+                                        option(value=data.userToUpdate.gender, selected, style="background-color: #98B7E1; color: white;") #{data.userToUpdate.gender}
+                                        option(value="male", selected=data.userToUpdate.gender === 'male') male
+                                        option(value="female", selected=data.userToUpdate.gender === 'female') female
+
+                                div(class="form__group")
+                                    label(class="form__label", for="professional") Professional (fictional)
+                                    input#professional(class="form__input", type="text", value=data.userToUpdate.professional)
+                                div(class="form__group")
+                                    label(class="form__label", for="email") E-Mail
+                                    input#email(class="form__input", type="email", value=data.userToUpdate.email)
+                                div(class="form__group ma-bt-md")
+                                    label(class="form__label", for="password") Password
+                                    input#password(class="form__input", type="text", value=data.userToUpdate.password, readonly, style="background-color: lightgrey;")
+                                div(class="form__group ma-bt-md")
+                                    label(class="form__label", for="passwordEncripted") Decrypted password
+                                    input#passwordEncripted(class="form__input", type="text", value=data.userDecryptedPassword, readonly, style="background-color: lightgrey;")
+                                div(class="form__group")
+                                    label(class="form__label", for="language") Language
+                                    input#language(class="form__input", type="text", value=data.userToUpdate.language, readonly, style="background-color: lightgrey;")
+                                div(class="form__group")
+                                    label(class="form__label", for="role") Role
+                                    select#role(class="form__input")
+                                        option(value=data.userToUpdate.role, selected, style="background-color: #98B7E1; color: white;") #{data.userToUpdate.role}
+                                        option(value="Chef", selected=data.userToUpdate.role === 'Chef') Chef
+                                        option(value="Schichtleiter", selected=data.userToUpdate.role === 'Schichtleiter') Schichtleiter
+                                        option(value="user", selected=data.userToUpdate.role === 'user') User
+                                        option(value="Unterhalt", selected=data.userToUpdate.role === 'Unterhalt') Unterhalt
+
+                                //div(class="form__group")
+                                    label(class="form__label", for="departments") Departments
+                                    h1= data.userToUpdate.department
+
+                                div(class="form__group")
+                                    label(class="form__label", for="departments") Departments (fictional)
+
+                                    each departmentOption in [ 'Schweisserei', 'Zieherei', 'Anarbeit', 'Engineering', 'Konstruktion', 'Unterhalt', 'IT', 'Operations', 'Geschäfts-Führung' ]
+                                        //- Überprüfen, ob die aktuelle Abteilung im Array der Benutzerabteilungen enthalten ist
+                                        - var checked = data.userToUpdate.department && data.userToUpdate.department.includes(departmentOption)
+
+                                        label(class="form__checkbox-label" style="display: block; margin-bottom: 10px;border: none;")
+                                            input#department(class="form__checkbox-box", type="checkbox", name="departments", value=departmentOption, checked=checked,  style="width: 20px; height: 20px;")
+                                            span(class="form__checkbox-name", style="font-size: 1.5rem;") #{departmentOption}
+            
+
+
+                                br
+                                button.btn.btn--small.btn--green.btn--saveUpdateUserByAdmin Save
+                                a.btn-space
+                                button.btn.btn--small.btn--red.btn--deleteUpdateUserByAdmin Delete
+                                a.btn-space
+                                a.btn.btn--small.btn--gray(href=`/api/v1/manage_users`) Cancel
+
+                                script.
+                                    console.log("bin Skript")
+                                    function getSelectedDepartments () {
+                                        const departmentCheckboxes = document.querySelectorAll('input[name="departments"]');
+                                        let selectedDepartments = [];
+                                        departmentCheckboxes.forEach((checkbox) => {
+                                            if (checkbox.checked) {
+                                                selectedDepartments.push(checkbox.value);
+                                            }
+                                        });
+                                        if (selectedDepartments.length > 0) {
+                                            console.log(selectedDepartments + " sind angewählt");
+                                            //alert("Department gewählt: "+ selectedDepartments)
+                                            document.querySelector('#department').value = selectedDepartments;
+                                        } else {
+                                            console.log(selectedDepartments.length + " Departments!!!");
+                                            alert('Bitte wählen Sie mindestens eine Abteilung aus.');
+                                        }
+                                    }
+
+                                    document.querySelector('.btn--saveUpdateUserByAdmin').addEventListener('click', () => {
+                                        getSelectedDepartments();
+                                    });

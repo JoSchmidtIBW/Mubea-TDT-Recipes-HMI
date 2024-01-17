@@ -1,0 +1,84 @@
+<rezept>
+    
+    <artikelnummer>10183037</artikelnummer>
+    <artikelname>MTT0106DC013 029.50x4.40-3.45</artikelname>
+    <teilenummer>MTT0106DC013</teilenummer>
+    <zeichnungsnummer>MTT0106DC013</zeichnungsnummer>
+    <aenderungsstand-zeichnung>16</aenderungsstand-zeichnung>
+    <aenderungsstand-rezept>5</aenderungsstand-rezept>
+    <beschreibung></beschreibung>
+    <profile-gekoppelt>2</profile-gekoppelt>
+    <kommentar>
+
+    </kommentar>
+    
+    
+    <mindest-gutanteil>80</mindest-gutanteil>
+    
+    <dorn>
+      <dav>34.7</dav>
+      <div>24.7</div>
+      <angel>150 </angel>
+      <dan>29.50</dan>
+      <stufen>
+        <stufe>
+          <d>20.70</d>
+          <pos>0.0</pos>
+          <rampe-rein>30.0</rampe-rein>
+          <rampe-raus>26.0</rampe-raus>
+          <dehnung>1.0</dehnung>
+        </stufe>
+        <stufe>
+          <d>22.60</d>
+          <pos>45.0</pos>
+          <rampe-rein>30.0</rampe-rein>
+          <rampe-raus>26.0</rampe-raus>
+          <dehnung>1.0</dehnung>
+        </stufe>
+      </stufen>
+    </dorn>
+
+    <mehrfachlaenge>
+        <fixlaenge>1360</fixlaenge>
+        <ausgleichsstueck>50</ausgleichsstueck>
+        <mehrfachlaenge>6932</mehrfachlaenge>
+        <anzahl-fixlaengen-pro-mehrfachlaenge>6</anzahl-fixlaengen-pro-mehrfachlaenge>
+        <neg-tol-mehrfachlaenge>30</neg-tol-mehrfachlaenge>
+        <pos-tol-mehrfachlaenge>150</pos-tol-mehrfachlaenge>
+        <mindestanzahl-gutprofile>3</mindestanzahl-gutprofile>
+    </mehrfachlaenge>
+    
+    <standardwerte>
+        <obere-toleranz>0.15</obere-toleranz>
+        <untere-toleranz>0.25</untere-toleranz>
+        <mindest-gutanteil>80</mindest-gutanteil>
+    </standardwerte>
+    
+    <eckenliste>
+        <ecke>
+            <x>0</x>
+            <z>4.4</z>
+        </ecke>
+        <ecke>
+            <x>488</x>
+            <z>4.4</z>
+        </ecke>
+        <ecke>
+            <x>533</x>
+            <z>3.45</z>
+        </ecke>
+        <ecke>
+            <x>969</x>
+            <z>3.45</z>
+        </ecke>
+        <ecke>
+            <x>1010</x>
+            <z>4.4</z>
+        </ecke>
+        <ecke>
+            <x>1500</x>
+            <z>4.4</z>
+        </ecke>
+    </eckenliste>
+    
+</rezept>

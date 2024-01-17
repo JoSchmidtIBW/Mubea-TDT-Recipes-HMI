@@ -1,0 +1,135 @@
+<rezept>
+    
+    <artikelnummer>10183944</artikelnummer>
+    <artikelname>MTT0803DA001 027.60x4.40-3.60-3.30 - 15m/min -</artikelname>
+    <teilenummer>MTT0803DA001</teilenummer>
+    <zeichnungsnummer>MTT0803DA001</zeichnungsnummer>
+    <aenderungsstand-zeichnung>3</aenderungsstand-zeichnung>
+    <aenderungsstand-rezept>1</aenderungsstand-rezept>
+    <beschreibung></beschreibung>
+    
+    <kommentar>
+Erstellung 26.04.2017 JOS
+    </kommentar>
+    
+    
+    <mindest-gutanteil>80</mindest-gutanteil>
+    
+    <dorn>
+      <dav>41.0</dav>
+      <div>29.2</div>
+      <angel>150 </angel>
+      <dan>27.6</dan>
+      <stufen>
+        <stufe>
+          <d>18.8</d>
+          <pos>0.0</pos>
+          <rampe-rein>30.0</rampe-rein>
+          <rampe-raus>26.0</rampe-raus>
+          <dehnung>1.0</dehnung>
+        </stufe>
+        <stufe>
+          <d>20.4</d>
+          <pos>35.0</pos>
+          <rampe-rein>30.0</rampe-rein>
+          <rampe-raus>26.0</rampe-raus>
+          <dehnung>1.0</dehnung>
+        </stufe>
+        <stufe>
+          <d>21.0</d>
+          <pos>60.0</pos>
+          <rampe-rein>30.0</rampe-rein>
+          <rampe-raus>26.0</rampe-raus>
+          <dehnung>1.0</dehnung>
+        </stufe>
+      </stufen>
+    </dorn>
+
+    <mehrfachlaenge>
+        <fixlaenge>1480</fixlaenge>
+        <ausgleichsstueck>50</ausgleichsstueck>
+        <mehrfachlaenge>9400</mehrfachlaenge>
+        <anzahl-fixlaengen-pro-mehrfachlaenge>6</anzahl-fixlaengen-pro-mehrfachlaenge>
+        <neg-tol-mehrfachlaenge>30</neg-tol-mehrfachlaenge>
+        <pos-tol-mehrfachlaenge>150</pos-tol-mehrfachlaenge>
+        <mindestanzahl-gutprofile>4</mindestanzahl-gutprofile>
+    </mehrfachlaenge>
+    
+    <standardwerte>
+        <obere-toleranz>0.15</obere-toleranz>
+        <untere-toleranz>0.25</untere-toleranz>
+        <mindest-gutanteil>80</mindest-gutanteil>
+    </standardwerte>
+    
+    <eckenliste>
+        <ecke>
+            <x>0</x>
+            <z>3.6</z>
+        </ecke>
+        <ecke>
+            <x>257</x>
+            <z>3.6</z>
+        </ecke>
+        <ecke>
+            <x>260</x>
+            <z>3.9</z>
+        </ecke>
+        <ecke>
+            <x>287</x>
+            <z>4.4</z>
+        </ecke>
+        <ecke>
+            <x>465</x>
+            <z>4.4</z>
+        </ecke>
+        <ecke>
+            <x>485</x>
+            <z>3.6</z>
+        </ecke>
+        <ecke>
+            <x>507.6</x>
+            <z>3.6</z>
+        </ecke>
+        <ecke>
+            <x>567.6</x>
+            <z>3.3</z>
+        </ecke>
+        <ecke>
+            <x>847.4</x>
+            <z>3.3</z>
+        </ecke>
+        <ecke>
+            <x>849.4</x>
+            <z>3.4</z>
+        </ecke>
+        <ecke>
+            <x>877.4</x>
+            <z>3.6</z>
+        </ecke>
+        <ecke>
+            <x>923.9</x>
+            <z>3.6</z>
+        </ecke>
+        <ecke>
+            <x>925.9</x>
+            <z>3.9</z>
+        </ecke>
+        <ecke>
+            <x>938.9</x>
+            <z>4.4</z>
+        </ecke>
+        <ecke>
+            <x>1103.4</x>
+            <z>4.4</z>
+        </ecke>
+        <ecke>
+            <x>1143.4</x>
+            <z>3.6</z>
+        </ecke>
+        <ecke>
+            <x>1480</x>
+            <z>3.6</z>
+        </ecke>
+    </eckenliste>
+    
+</rezept>

@@ -1,0 +1,94 @@
+[
+    {
+        "headerData": {
+            "itemNumber": 10183037,
+            "productName": "MTT0106DC013 029.50x4.40-3.40",
+            "partNumber": "MTT0106DC013",
+            "blueprintNumber": "MTT0106DC013",
+            "changeBlueprintStatus": 16,
+            "changeRecipeStatus": 5,
+            "description": "",
+            "drawingSpeed": "15m/min",
+            "comment": [
+                {
+                    "createdAt": "2023-10-16T05:52:11.936+00:00",
+                    "user": "mister x",
+                    "commentDescription": "Bla bla"
+                }
+            ]    
+        },
+        "tubeValues": {
+            "minimumGoodShare": 80,
+            "profileCoupled": 2
+        },
+        "thornValues": {
+            "tubeOuterDiameterLastDraw": 34.70,
+            "tubeInnerDiameterLastDraw": 24.70,
+            "rod": 150,
+            "tubeOuterDiameterTDTDraw": 29.50,
+            "thornLevels": {
+                "thornLevel": [
+                    {
+                        "thornDiameter": 20.70,
+                        "position": 0.0,
+                        "rampIn": 30.0,
+                        "rampOut": 26.0,
+                        "strech": 1.0
+                    },
+                    {
+                        "thornDiameter": 22.60,
+                        "position": 45.0,
+                        "rampIn": 30.0,
+                        "rampOut": 26.0,
+                        "strech": 0
+                    }
+                ]
+            }
+        },
+        "multipleLengthData": {
+            "fixedLength": 1360,
+            "compensationPiece": 30,
+            "multipleLength": 6932,
+            "numberOfFixedLengthsPerMultipleLength": 6,
+            "negativeToleranceMultipleLength": 30,
+            "positiveToleranceMultipleLength": 150,
+            "minimumNumberOfGoodProfiles": 3
+        },
+        "standardValues": {
+            "upperTolerance": 0.15,
+            "lowerTolerance": 0.15
+        },
+        "cornerList": {
+            "corner": [
+                {
+                    "x": 0,
+                    "z": 4.40
+                },
+                {
+                    "x": 488,
+                    "z": 4.40
+                },
+                {
+                    "x": 508,
+                    "z": 3.45
+                },
+                {
+                    "x": 969,
+                    "z": 3.45
+                },
+                {
+                    "x": 971,
+                    "z": 3.90
+                },
+                {
+                    "x": 989,
+                    "z": 4.40
+                },
+                {
+                    "x": 1360,
+                    "z": 4.40
+                }
+            ]
+        } 
+    }
+]

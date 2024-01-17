@@ -1,0 +1,23 @@
+header.header
+    nav.nav.nav--tours
+        //a.nav__el(href='/api/v1/overview') Overview
+        if user
+            a.nav__el(href='/api/v1/overviewInlogt') Overview
+    .header__logo
+        .LogoBildText
+            img(src='/img/Mubea_logo.svg.png', alt='Mubea logo')
+            a.logoTrack Track
+            a.logoTDT_ASMAG _ASMAG-TDT
+            //h1 XXX
+    nav.nav.nav--user
+        if user
+            a.nav__el.nav__el--logout Log out
+            a.nav__el.avatar(href='/api/v1/me')
+                img.nav__user-img(src=`/img/users/${user.photo}`, alt=`Photo of ${user.firstName}`)
+                span= user.firstName
+                span(style='margin-left:5px;')= user.lastName
+        else
+            // Comes from isloggedIn- Middleware, where res.locals.user = currentUser
+            //a.nav__el(href='/api/v1/login') Log in//original
+            a.nav__el.nav__el--cta(href='/api/v1/login') Log in
+            //a.nav__el.nav__el--cta(href='/#') Sign up

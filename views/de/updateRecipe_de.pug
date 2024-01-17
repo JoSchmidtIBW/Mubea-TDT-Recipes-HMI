@@ -1,0 +1,89 @@
+extends base
+
+block content
+    main.main
+        h1 hellllllooooo
+        h1= user.role
+        br
+        //h2= data.kopfDaten.artikelNummer
+        h2= data
+
+        .user-view__content
+            .user-view__form-container
+                //h2.heading-secondary.ma-bt-md= `Edit machine: ${data.machine.name}`
+                //h3.heading-secondary.ma-bt-md= `Sector: ${data.sectorASMA.name}`
+
+                form.form.form-updateRecipe-data
+                    // hide these fields, do not delete! it needs the ID's!
+                    //input#machineID(type="hidden", value=data.machine._id)
+                    br
+                    //input#sectorASMAID(type="hidden", value=data.sectorASMA._id)
+                    br
+
+                    div(class="form__group ma-bt-md")
+                        //label(class="form__label", for="sectorASMAname") Sector name
+                        //input#sectorASMAname(class="form__input", type="text", value=data.sectorASMA.name)
+                    div(class="form__group")
+                        //label(class="form__label", for="sectorASMAdescription_de") Description_de
+                        //input#sectorASMAdescription_de(class="form__input" type="text" value=data.sectorASMA.description_de)
+                    div(class="form__group")
+                        //label(class="form__label", for="sectorASMAdescription_en") Description_en
+                        //input#sectorASMAdescription_en(class="form__input" type="text" value=data.sectorASMA.description_en)
+
+                    button.btn.btn--small.btn--green.btn--saveUpdateRecipe Save
+                    a.btn-space
+                    a.btn.btn--small.btn--gray(href=`/api/v1/overviewInlogt`) Cancel
+                    br
+                    br
+                    br
+
+                    div(class="form__group ma-bt-md")
+                        label(class="form__label", for="sectorASMAname" style="color: red") Delete recipe
+                        h4(style="color:red") (Attention, the recipe will be lost with all the components.)
+                        input(class="form__input", type="text", value=data.kopfDaten.artikelNummer, readonly, style="background-color: #EFDDDC")
+                        br
+                        input(class="form__input", type="text", value=data.kopfDaten.artikelName, readonly, style="background-color: #EFDDDC")
+                        //br
+                        //input(class="form__input", type="text", value=data.sectorASMA.description_en, readonly, style="background-color: #EFDDDC")
+                    button.btn.btn--small.btn--red.btn--deleteRecipe Delete
+        //h1= user
+        br
+
+        //a.edit-button(href="#")
+            svg(class="heading-box__icon")
+                use(xlink:href="/img/icons.svg#icon-edit-3")
+        br
+        //h1= data
+        br
+        //pre= data
+        
+        if(user.role === 'admin')
+            //{
+            //h1 die Rolle ist admin
+            a.edit-button.toggle-pre-recipe-button(type="button") Rezept-Ansicht
+                svg(class="heading-box__icon")
+                    use(xlink:href="/img/icons.svg#icon-arrow-down")
+                    //icon-file-text")
+                    //icon-eye"
+            br
+            .pre-recipe-container(style="display: none;")
+                br
+                h2 Daten-Ansicht
+                //pre= data
+                pre= JSON.stringify(data, null, 2)
+        //}
+
+
+        script.
+            document.addEventListener('DOMContentLoaded', function() {
+                const button = document.querySelector('.toggle-pre-recipe-button');
+                const container = document.querySelector('.pre-recipe-container');
+
+                button.addEventListener('click', function() {
+                    if (container.style.display === 'none') {
+                        container.style.display = 'block';
+                    } else {
+                        container.style.display = 'none';
+                    }
+                });
+            });

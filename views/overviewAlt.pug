@@ -1,0 +1,37 @@
+extends base
+
+block content 
+    main.main 
+        h1 hallo i bims
+        br
+        //h1= data.recipe.kopfDaten
+        //h1= data
+        //each recipe in data
+            h2= recipe.kopfDaten.artikelNummer
+            p= recipe.kopfDaten.artikelName
+        br
+        br
+        
+        table#recipesTDToverviewTable.recipesTDToverviewTable.table
+            thead
+            tr
+                th ID
+                th Artikelnummer
+                //button-upDown
+                    spam.arrow-up
+                //button-upDown
+                    spam.arrow-down
+                th Artikelname
+                th Edit
+            tbody
+                each recipe in data
+                    tr
+                        td= recipe._id
+                        td= recipe.kopfDaten.artikelNummer
+                        td= recipe.kopfDaten.artikelName
+                        td
+
+        br
+        br
+
+        a.btn.btn--small.btn--green(href="/api/v1/txt_xml_fileuploader") Go to DropDown    

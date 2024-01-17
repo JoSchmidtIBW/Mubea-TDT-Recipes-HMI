@@ -1,0 +1,142 @@
+extends base
+
+block content
+    main.main
+        //if(currentUser.role === 'admin')
+            table(style="margin: 0 auto;")
+                tr
+                    td(style="text-align: center; padding-right: 20px;")
+                        h2 Total:
+                    td(style="text-align: right; font-weight: bold;")
+                        h1=`${users.length}`
+                    td(style="padding-left: 10px;")
+                        h2 Employees
+                tr
+                    td(style="text-align: center; padding-right: 20px;")
+                        h2 Total:
+                    td(style="text-align: right; font-weight: bold;")
+                        h1=`${machinery.length}`
+                    td(style="padding-left: 10px;")
+                        h2 Machinery
+
+        .card-container
+            script.
+                console.log("Hello World- Overview");
+
+            //each department in departments
+                - let slug = department.slug
+                //h1= department.slug
+                - if (department.slug === 'geschafts-fuhrung')
+                       //- department.slug = 'Geschäfts-Führung'
+                //h1= department.slug
+            //a.card(href=`/api/v1/departments/${encodeURIComponent(department.slug)}`, style="text-decoration: none; color: #7c7875;")
+            a.card(href=`/api/v1/create2-St-2-BSB`, style="text-decoration: none; color: #7c7875;")
+                    .card__header
+                        .card__picture
+                            card__picture-overlay &nbsp;
+                            //img.card__picture-img(src=`/img/RezepteBilderASMAG/zweifach2_1.png`, alt=`zweifach2_1.png`)
+                            img(src=`/img/RezepteBilderASMAG/zweifach2_1.png`, alt=`zweifach2_1.png`)
+                        h3.heading-tertirary
+                            span 2-St-2-BSB
+
+                    .card__details
+                        h4.card__sub-heading= `Zwei-Stufen-Rezept`
+                        p.card__text Bestehend aus zwei Wanddicken und 2 Übergänge
+                        .card__data
+                            //svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-map-pin')
+                            span icon
+                        //.card__data
+                            svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-user')
+                            span= `${department.employeesCount} employees`
+                        //.card__data
+                            svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-machine')
+                            span= `${department.machineryCount} machinery`
+            a.card(href=`#`, style="text-decoration: none; color: #7c7875;")
+                    .card__header
+                        .card__picture
+                            card__picture-overlay &nbsp;
+                            img(src=`/img/RezepteBilderASMAG/zweifach4_1.png`, alt=`zweifach4_1.png`)
+                        h3.heading-tertirary
+                            span 2-St-4-SBSBS
+
+                    .card__details
+                        h4.card__sub-heading= `Zwei-Stufen-Rezept`
+                        p.card__text Bestehend aus zwei Wanddicken und 4 Übergänge
+                        .card__data
+                            //svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-map-pin')
+                            span icon
+
+            a.card(href=`#`, style="text-decoration: none; color: #7c7875;")
+                    .card__header
+                        .card__picture
+                            card__picture-overlay &nbsp;
+                            //img.card__picture-img(src=`/img/RezepteBilderASMAG/zweifach6_1.png`, alt=`zweifach6_1.png`)
+                            img(src=`/img/RezepteBilderASMAG/zweifach6_1.png`, alt=`zweifach6_1.png`)
+                        h3.heading-tertirary
+                            span 2-St-6-BSBSBSB
+
+                    .card__details
+                        h4.card__sub-heading= `Zwei-Stufen-Rezept`
+                        p.card__text Bestehend aus zwei Wanddicken und 6 Übergänge
+                        .card__data
+                            //svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-map-pin')
+                            span icon       
+
+            a.card(href=`#`, style="text-decoration: none; color: #7c7875;")
+                    .card__header
+                        .card__picture
+                            card__picture-overlay &nbsp;
+                            img(src=`/img/RezepteBilderASMAG/dreifach1_1.png`, alt=`dreifach1_1.png`)
+                        h3.heading-tertirary
+                            span 3-St-4-MBSBM
+
+                    .card__details
+                        h4.card__sub-heading= `Drei-Stufen-Rezept`
+                        p.card__text Bestehend aus drei Wanddicken und 4 Übergänge
+                        .card__data
+                            //svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-map-pin')
+                            span icon         
+
+            a.card(href=`#`, style="text-decoration: none; color: #7c7875;")
+                    .card__header
+                        .card__picture
+                            card__picture-overlay &nbsp;
+                            //img.card__picture-img(src=`/img/RezepteBilderASMAG/dreifach2_1.png`, alt=`dreifach2_1.png`)
+                            img(src=`/img/RezepteBilderASMAG/dreifach2_1.png`, alt=`dreifach2_1.png`)
+                        h3.heading-tertirary
+                            span 3-St-4-BMSMB
+
+                    .card__details
+                        h4.card__sub-heading= `Drei-Stufen-Rezept`
+                        p.card__text Bestehend aus drei Wanddicken und 4 Übergänge
+                        .card__data
+                            //svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-map-pin')
+                            span icon                                 
+
+            a.card(href=`#`, style="text-decoration: none; color: #7c7875;")
+                    .card__header
+                        .card__picture
+                            card__picture-overlay &nbsp;
+                            img.card__picture-img(src=`/img/RezepteBilderASMAG/JCDentonThugLife3.png`, alt=`JCDentonThugLife3.png`)
+                        h3.heading-tertirary
+                            span Experte
+
+                    .card__details
+                        h4.card__sub-heading= `Rezept erstellen als Profi`
+                        p.card__text Für Spezial- Rezepte
+                        .card__data
+                            //svg.card__icon
+                                use(xlink:href='/img/icons.svg#icon-map-pin')
+                            span icon   
+        //br
+        //br
+        a.btn.btn--small.btn--green(href="/api/v1/overviewInlogt") Zurück Home     
+        br
+        br                                             

@@ -1,0 +1,14 @@
+footer.footer
+    .footer__logo
+        img(src='/img/Mubea_logo.svg.png', alt='Mubea logo')
+        //h1 TDT
+    ul.footer__nav
+        li: a(href='#') Über TDT
+        li: a(href='#') Über ASMAG
+        li: a(href='#') Kontakt
+    p.footer__copyright &copy; Von Matthias Trudewind, John Schmidt. Alle Rechte vorbehalten. &nbsp &nbsp Version 1.0 &nbsp &nbsp
+        span#p1
+        script.
+           var date = new Date();
+           var current_date = date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
+           document.getElementById("p1").innerHTML = current_date;

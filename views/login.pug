@@ -1,0 +1,57 @@
+extends base
+
+block content
+    main.main.BackgroundImage
+        br
+        br
+        br
+        .login-form
+            h2.heading-secondary.ma-bt-lg Log into your account
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn-space
+                a.btn.btn--little#helpButton(href='#') Help
+            form.form.form--login
+                .form__group
+                    label.form__label1(for='employeeNumber') Employee number
+                    input#employeeNumber(class="form__input" type="number" placeholder="70220" required="required" min="10000" max="99999")
+                .form__group.ma-bt-md
+                    label.form__label1(for='password') Password
+                    input#password.form__input(type='password', autocomplete='current-password', placeholder='••••••••', required, minlength='8')
+                .form__group
+                    br
+                    button.btn.btn--green Login
+                    br
+                    //br
+                    
+
+                script.
+                    const employeeNumberInput = document.querySelector('#employeeNumber');
+                    const helpButton = document.querySelector('#helpButton');
+
+                    helpButton.addEventListener('click', function() {
+                      console.log("help click");
+                      var computedStyle = window.getComputedStyle(helpButton);
+                      var buttonColor = computedStyle.getPropertyValue('color');
+                      if (buttonColor === 'rgb(255, 255, 255)') {
+                        alert('Please log in with your employee- number and your password.\n(The password can be requested from your direct superior.)');
+                      }
+                    });
+
+                    employeeNumberInput.addEventListener('input', () => {
+                      if (employeeNumberInput.value === '70220') {
+                        helpButton.style.color = 'red';
+                        helpButton.setAttribute('href', '/api/v1/forgotPassword');
+                        helpButton.removeAttribute('onclick');
+                      } else {
+                        helpButton.style.color = 'blue';
+                        helpButton.setAttribute('onclick', "alert('Forgot Password? Please call this number: 9272')");
+                        helpButton.removeAttribute('href');
+                      }
+                    });

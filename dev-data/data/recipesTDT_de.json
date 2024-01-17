@@ -1,0 +1,94 @@
+[
+    {
+        "kopfDaten": {
+            "artikelNummer": 10183037,
+            "artikelName": "MTT0106DC013 029.50x4.40-3.40",
+            "teileNummer": "MTT0106DC013",
+            "zeichnungsNummer": "MTT0106DC013",
+            "aenderungsstandZeichnung": 16,
+            "aenderungsstandRezept": 5,
+            "beschreibung": "",
+            "ziehGeschwindigkeit": "15m/min",
+            "kommentar": [
+                {
+                    "erstelltAm": "2023-10-16T05:52:11.936+00:00",
+                    "createdBy": "643c1f042df0321cb8a06a47",
+                    "kommentarBeschreibung": "Bla bla"
+                }
+            ]    
+        },
+        "rohrWerte": {
+            "mindestGutanteil": 80,
+            "profileGekoppelt": 2
+        },
+        "dornWerte": {
+            "rohrAussenDurchmesserLetzterZug": 34.70,
+            "rohrInnenDurchmesserLetzterZug": 24.70,
+            "angel": 150,
+            "rohrAussenDurchmesserTDTZug": 29.50,
+            "dornStufen": {
+                "dornStufe": [
+                    {
+                        "dornDurchmesser": 20.70,
+                        "position": 0.0,
+                        "rampeRein": 30.0,
+                        "rampeRaus": 26.0,
+                        "dehnung": 1.0
+                    },
+                    {
+                        "dornDurchmesser": 22.60,
+                        "position": 45.0,
+                        "rampeRein": 30.0,
+                        "rampeRaus": 26.0,
+                        "dehnung": 0
+                    }
+                ]
+            }
+        },
+        "mehrfachlaengenDaten": {
+            "fixlaenge": 1360,
+            "ausgleichstueck": 30,
+            "mehrfachlaenge": 6932,
+            "anzahlFixlaengenProMehrfachlaenge": 6,
+            "negativeToleranzMehrfachlaenge": 30,
+            "positiveToleranzMehrfachlaenge": 150,
+            "mindestanzahlGutprofile": 3
+        },
+        "standartWerte": {
+            "obereToleranz": 0.15,
+            "untereToleranz": 0.15
+        },
+        "eckenListe": {
+            "ecke": [
+                {
+                    "x": 0,
+                    "z": 4.40
+                },
+                {
+                    "x": 488,
+                    "z": 4.40
+                },
+                {
+                    "x": 508,
+                    "z": 3.45
+                },
+                {
+                    "x": 969,
+                    "z": 3.45
+                },
+                {
+                    "x": 971,
+                    "z": 3.90
+                },
+                {
+                    "x": 989,
+                    "z": 4.40
+                },
+                {
+                    "x": 1360,
+                    "z": 4.40
+                }
+            ]
+        } 
+    }
+]

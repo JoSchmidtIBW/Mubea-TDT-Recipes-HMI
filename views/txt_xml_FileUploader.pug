@@ -1,0 +1,265 @@
+extends base
+
+block content
+    main.main_txt_xml_Fileuploader
+        //h1 .TXT- .XML- FileUploader
+        //br
+        //h2 Drag&amp;Drop
+        //br
+        //h3 Drag the .txt- or .xml- files into the place
+        
+        //<div id="dragDrop" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+        br
+        //br
+        div.hauptContainer
+            div.containerNeonText
+                h1.h1NeonText Drag&amp;Drop - TDT - Rezepte
+                br
+                h2.h2NeonText .txt- .xml- files
+                //br
+            //br
+            //br
+            //br
+            //div.dragDrop
+            br
+            br
+            br
+            form.form.form--dragDrop
+                .form__group
+                    //label.form__label1(for='hiddenDataInputField' type="hidden") hiddenRecipesField
+                    input#hiddenRecipesField(class="form__input" type="hidden" value="" placeholder="Eingehende Rezepte" required="required" min="10000" max="99999")
+                    //br
+                    //br
+                .form__group
+                    //button.btn.btn--green Login    
+                    //br
+                    //br
+                    //input(id="hiddenField", value="" style='width: 500px; height: 25px;')
+                    //br
+                    //br
+                    //br
+                    div.glow-on-hover
+                        div.innerDragDrop(onDrop="dropHandler(event)" onDragOver="dragOverHandler(event)")
+                            h1#inputFileNameH1 Ziehen Sie Ihr Rezept hierher
+                    //div#glowContainer.glow-on-hover
+
+                    br
+                    br
+                    br
+                    br
+                    button.btn.btnDragDropSave Save
+                    a.btn-space
+                    a.btn-space
+                    a.btn-space
+                    a.btn-space
+                    a.btn-space
+                    a.btn-space
+                    a.btn-space
+                    a.btn-space            
+                    a.btn.btn--small.btn--gray(href="/api/v1/overviewInlogt") Cancel
+                    //a.btn.btn--small.btn--gray(href=`/api/v1/createASMAmachine/${data.machine._id}`) Cancel
+                    //button Cancel
+                    br
+
+            script. 
+                let isDragging = false;
+
+                document.querySelector('.innerDragDrop').addEventListener('dragenter', () => {
+                    isDragging = true;
+                    //console.log("dragEnter: "+isDragging)
+                    //document.querySelector('.innerDragDrop').style.background = '#444444';
+                    //document.querySelector('.innerDragDrop').classList.add('hovered');
+                    document.querySelector('.innerDragDrop').style.background = '#444444';
+                    //document.querySelector('.innerDragDrop').style.background = 'pink';
+                });
+
+                document.querySelector('.innerDragDrop').addEventListener('dragleave', () => {
+                    isDragging = false;
+                    //console.log("dragLeave: "+isDragging)
+                    dragLeaveHandler();
+                });
+
+                document.querySelector('.innerDragDrop').addEventListener('dragover', (event) => {
+                    //console.log("dragOver: ")
+                    if (!isDragging) {
+                        dragLeaveHandler();
+                    }
+                    event.preventDefault();
+                    dropHandler(event)
+                });
+
+                function dragLeaveHandler() {
+                    //document.querySelector('.innerDragDrop').classList.add('hovered');
+                    //document.querySelector('.innerDragDrop').style.background = '#444444';
+                    //document.querySelector('.innerDragDrop.hovered').classList.add('enthovered');
+                    document.querySelector('.innerDragDrop').style.background = 'rgb(50, 50, 53)';
+                }
+
+                function dragOverHandler(event){
+                    //console.log('bin dragOverHandler...')
+                }
+
+                let fileDataArr = [];
+                
+                
+                function dropHandler(event) {
+                    console.log("bin dropHandler(event)")
+                    event.preventDefault();
+                    
+                    //console.log(document.getElementById('inputFileNameH1'))
+                    const files = event.dataTransfer.files;
+                    if (files.length > 0) {
+                        
+                        for (let i = 0; i < files.length; i++) {
+                            const reader = new FileReader();
+                            reader.onload = function (e) {
+                                const fileName = files[i].name;
+                                const fileText = e.target.result;
+
+                                const fileExtension = fileName.split('.').pop();
+                                let hiddenFieldStr = "";
+                                if (fileExtension !== "txt" && fileExtension !== "xml") {
+                                    // Hier die Fehlermeldung einfügen
+                                    document.getElementById('inputFileNameH1').innerText = "Ungültiges Dateiformat";
+                                    console.error("Ungültiges Dateiformat :(");
+                                    fileDataArr = [];
+                                    hiddenFieldStr = "";
+                                    document.getElementById('hiddenRecipesField').value = "Ungültiges Dateiformat!"
+                                    return;
+                                }
+                                
+                                fileDataArr.push({ fileName, fileText });
+                                //if (fileDataArr.length === files.length) {
+                                console.log("All files are loaded:", fileDataArr); 
+                                    
+                                
+                                let inputDDFileName = "";
+                                for (let j = 0; j < fileDataArr.length; j++) {
+                                    inputDDFileName = inputDDFileName + fileDataArr[j].fileName + "\n";
+                                    //hiddenFieldStr += JSON.stringify(fileDataArr[j]) + ',';
+                                    //hiddenFieldStr += JSON.stringify(fileDataArr[j]) + '\n';
+                                }
+                                //- if (j !== fileDataArr.length - 1) {
+                                //-     hiddenFieldStr += ',';
+                                //- }
+                                hiddenFieldStr += JSON.stringify(fileDataArr)
+                                document.getElementById('hiddenRecipesField').value = hiddenFieldStr;
+                                console.log("inputDDFileName: "+inputDDFileName)
+                                document.getElementById('inputFileNameH1').innerText = inputDDFileName;
+                                
+                            };
+                            reader.readAsText(files[i]);
+                        }
+                        dragLeaveHandler(event);
+                    }
+                }
+
+
+                //- function dropHandler(event) {
+                //-     event.preventDefault();
+                //-     const files = event.dataTransfer.files;
+                //-     if (files.length > 0) {
+                //-         const reader = new FileReader();
+                //-         reader.onload = function (e) {
+                //-             const fileName = files[0].name;
+                //-             const text = e.target.result;
+                //-             document.getElementById('hiddenField').value = fileName;
+                //-             console.log("text: "+text);
+                //-         };
+                //-         reader.readAsText(files[0]);
+                //-         dragLeaveHandler(event);
+                //-     }
+                //- }
+
+                //- function dragEnterHandler(event) {
+                //-     console.log('File dragged in of the div');
+                //-     document.querySelector('.innerDragDrop').style.background = '#999';
+                //-     //dragLeaveHandler(event);
+                //- }
+
+                //- function dragLeaveHandler(event) {
+                //-     console.log('File dragged out of the div');
+                //-     document.querySelector('.innerDragDrop').style.background = '#008000';
+                //-     //'rgb(50, 50, 53)';
+                //- }
+
+                //- function dragOverHandler(event) {
+                //-     const rect = event.target.getBoundingClientRect();
+                //-     const y = event.clientY;
+                //-     const x = event.clientX;
+                //-     if (
+                //-         y < rect.top || y >= rect.bottom || x < rect.left || x >= rect.right
+                //-     ) {
+                //-         dragLeaveHandler(event);
+                //-     } else {
+                //-         dragEnterHandler(event);
+                //-     }
+                //-     event.preventDefault();
+                //-     //- console.log("event: " + event);
+                //-     //- console.log("event.target: ", event.target);
+                //-     //- console.log("event.dataTransfer: ", event.dataTransfer);
+                //-     //- event.preventDefault();
+                //-     //- dragEnterHandler(event);
+                //- }
+
+                //- function dropHandler(event) {
+                //-     console.log("bin dropHandler(event)")
+                //-     event.preventDefault();
+                    
+                    
+                //-     //console.log(document.getElementById('inputFileNameH1'))
+                //-     const files = event.dataTransfer.files;
+                //-     if (files.length > 0) {
+                        
+                //-         for (let i = 0; i < files.length; i++) {
+                //-             const reader = new FileReader();
+                //-             reader.onload = function (e) {
+                //-                 const fileName = files[i].name;
+                //-                 const fileText = e.target.result;
+                                
+                //-                 fileDataArr.push({ fileName, fileText });
+                //-                 //if (fileDataArr.length === files.length) {
+                //-                 console.log("All files are loaded:", fileDataArr); 
+                                    
+                //-                 let hiddenFieldStr = "";
+                //-                 let inputDDFileName = "";
+                //-                 for (let j = 0; j < fileDataArr.length; j++) {
+                //-                     inputDDFileName = inputDDFileName + fileDataArr[j].fileName + "\n";
+                //-                     hiddenFieldStr += JSON.stringify(fileDataArr[j]) + '\n';
+                //-                 }
+                //-                 document.getElementById('hiddenField').value = hiddenFieldStr;
+                //-                 //inputDDFileName = updatedInputDDFileName;
+                //-                 //document.getElementById('inputFileNameH1').innerText = inputDDFileName;
+                //-                 //console.log("bin schlaufe " + document.getElementById('inputFileNameH1'))
+                //-                 console.log("inputDDFileName: "+inputDDFileName)
+                //-                 document.getElementById('inputFileNameH1').innerText = inputDDFileName;
+                                                    
+                                    
+                                    
+                //-                 //- for(let i = 0; i<fileDataArr.length; i++){
+                //-                 //-     inputDDFileName = inputDDFileName + fileDataArr[i].fileName+"\n";
+                                      
+                //-                 //- }
+                //-                 //- document.getElementById('hiddenField').value = inputDDFileName;
+                //-                 //- console.log("bin schlaufe "+document.getElementById('inputFileNameH1'))
+                //-                 //- document.getElementById('inputFileNameH1').innerText = inputDDFileName;
+                //-                 //- setTimeout(() => {
+                //-                 //-     let inputFileNameH1 = document.getElementById('inputFileNameH1');
+                //-                 //-     if (inputFileNameH1) {
+                //-                 //-         inputFileNameH1.innerText = inputDDFileName;
+                //-                 //-     }
+                //-                 //- }, 100);
+
+                //-                 //- let inputFileNameH1 = document.getElementById('inputFileNameH1');
+                //-                 //- if(inputFileNameH1){
+                //-                 //-     inputFileNameH1.innerText = inputDDFileName;
+                //-                 //- }
+
+                //-                 //}
+                                
+                //-             };
+                //-             reader.readAsText(files[i]);
+                //-         }
+                //-         dragLeaveHandler(event);
+                //-     }
+                //- }

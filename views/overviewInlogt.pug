@@ -1,0 +1,117 @@
+extends base
+
+block content 
+    main.main 
+        h2#recipeSendStatus(style="margin-top:-40px; margin-left: -30px;") Gesendetes Rezept: .................
+        //recipeSendStatus
+        br
+        br
+        //br
+        //- a TDT- Rezepte
+        //- a
+        //- a.btn.btn--small.btn--green(href="#") Rezept senden
+        //- br
+        //- br
+        //- br
+        //- br
+        //br
+        //h1= data.recipe.kopfDaten
+        //h1= data
+        //each recipe in data
+            h2= recipe.kopfDaten.artikelNummer
+            p= recipe.kopfDaten.artikelName
+        //br
+        //br
+        div.containerOverview
+            //form.form.form--RecipeSend
+            //- h2 gesendetes Rezept: .................
+            //- br
+            //div.left-side
+                h1 Title in div left on the left side        
+                buttom buttom in div left, but on the rigth site
+            div.left-side()
+                div(style="display: flex; justify-content: space-between;")
+                    h1(style="margin: 0;") TDT- Rezepte
+                    //button(style="margin-right: 1px;") Buttton in div left, but on the right side
+                    a.btn.btn--small.btn--green.btn--recipeSend(href="#" style="margin-right: 15px;") Rezept senden
+                br    
+                table#recipesTDToverviewTable.recipesTDToverviewTable.table
+                    thead
+                    tr
+                        th ID
+                        th Artikelnummer
+                        th Artikelname
+                        th Letztes erstell-Datum
+                        th Ersteller
+                        //- //- //button-upDown
+                        //- //-     spam.arrow-up
+                        //- //- //button-upDown
+                        //- //-     spam.arrow-down
+                        th Edit
+                    tbody
+                        each recipe in data
+                            tr
+                                td= recipe._id
+                                td= recipe.kopfDaten.artikelNummer
+                                td= recipe.kopfDaten.artikelName
+                                //td= recipe.kopfDaten.kommentar
+                                td
+                                    - const lastComment = recipe.kopfDaten.kommentar[recipe.kopfDaten.kommentar.length - 1]
+                                    p= lastComment ? new Date(lastComment.erstelltAm).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' }) : ''
+                                //td
+                                    each comment in recipe.kopfDaten.kommentar
+                                        //p= comment.erstelltAm
+                                        //p(style="color: red;")= new Date(comment.erstelltAm).toLocaleDateString('de-DE')
+                                        //p(style="color: red;")= new Date(comment.erstelltAm).toLocaleDateString('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+                                        //td
+                                        //each comment in recipe.kopfDaten.kommentar
+                                        p= comment.createdBy
+                                td
+                                    - const lastCommentUser = recipe.kopfDaten.kommentar[recipe.kopfDaten.kommentar.length - 1]
+                                    p= lastCommentUser ? lastCommentUser.createdBy.firstName : ''  
+                                td    
+                br      
+
+            div.right-side.rightDiv
+                form.form.form--recipeSend 
+                    h1(style="border: 1px solid transparent; border-bottom-color: rgb(29, 245, 76);")
+                    br
+                    br
+                    input#recipeToSendRowdataInput(class="form__input" type="hidden" placeholder="RowData" style="background-color: lightgreen;")
+                //br
+                br                    
+                div.aussenDiv
+                    <div id="rightDiv">
+                    <!-- Hier wird der dynamische Inhalt angezeigt -->
+                    </div>
+
+        br
+        //br
+
+        //-a.btn.btn--small.btn--green(href="#") Rezept senden
+        //- a.btn-space
+        //- a.btn-space
+        //- //a.btn.btn--small.btn--green(href="/api/v1/txt_xml_fileuploader") Go to DropDown
+        //- a.btn-space
+        //- a.btn-space
+        //br
+        //br
+        a.btn.btn--small.btn--green(href="/api/v1/createRecipeOverview" style="margin-left: -30px;") Erstellen
+        //a.btn-space
+        //a.btn-space
+        //a.btn.btn--small.btn--green(href="#") Bearbeiten
+        
+        //if user
+            span= user.firstName
+            a.btn.btn--small.btn--green(href="/api/v1/createRecipeOverview") Rezept erstellen
+            //a.nav__el.nav__el--logout Log out
+            //a.nav__el.avatar(href='/api/v1/me')
+                img.nav__user-img(src=`/img/users/${user.photo}`, alt=`Photo of ${user.firstName}`)
+                span= user.firstName
+                span(style='margin-left:5px;')= user.lastName
+        //else
+            // Comes from isloggedIn- Middleware, where res.locals.user = currentUser
+            //a.nav__el(href='/api/v1/login') Log in//original
+            //a.nav__el.nav__el--cta(href='/api/v1/login') Log in
+            a.btn.btn--small.btn--green(href="#") Rezept erstellen
+            //a.nav__el.nav__el--cta(href='/#') Sign up      

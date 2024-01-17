@@ -1,0 +1,106 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+    li(class=`${active ? 'side-nav--active' : ''}`)
+        a(href=`${link}`)
+            svg
+                use(xlink:href=`/img/icons.svg#icon-${icon}`)
+            | #{text}
+
+block content
+    main.main
+        .user-viewAccount
+            nav.user-view__menu
+
+                ul.side-nav
+                    +navItem('#', 'Meine Einstellungen', 'settings', true)
+                    //+navItem('/documentations/dokuTest.txt', 'manual', false)
+                    //-a.button(href='/documentations/MubeaTrack-Instruction_manual.pdf', target='_blank') Instruction manual
+                    //-a hhello
+                //- if(user.role === 'admin' || user.role === 'Chef' || user.role === 'Schichtleiter' || user.role === 'user')
+                    ul.side-nav
+                       +navItem('/api/v1/txt_xml_fileuploader', 'txt-xml-Drag-&-Drop', 'file-plus', false)
+                //-ul.side-nav
+                    //-a.button(href='/documentations/MubeaTrack-Instruction_manual.pdf', target='_blank') Instruction manual
+                - if(user.role === 'admin' || user.role === 'Chef')
+                    .admin-nav
+                        h5.admin-nav__heading CHEF
+                        ul.side-nav
+                            +navItem('/api/v1/txt_xml_fileuploader', 'txt-xml-Drag-&-Drop', 'file-plus', false)
+
+                - if(user.role === 'admin')
+                    .admin-nav
+                        h5.admin-nav__heading= `${user.role}`
+                        ul.side-nav
+                            +navItem('/api/v1/manage_users', 'Benutzerverwaltung', 'users', false)
+
+            .user-view__content
+                .user-view__form-container
+                    h2.heading-secondary.ma-bt-md Meine Konto- Einstellungen
+
+                    form.form.form-user-data
+                        input#userId(type="hidden", value=`${user._id}`)
+                        div(class="form__group")
+                            label(class="form__label", for="employeeNumber") Mitarbeiter- Nummer
+                            input#employeeNumber(class="form__input", type="number", value=user.employeeNumber, readonly, style="background-color: lightgrey;")
+                        div(class="form__group")
+                            label(class="form__label", for="firstname") Vorname
+                            input#firstname(class="form__input", type="text", value=user.firstName)
+                        div(class="form__group")
+                            label(class="form__label", for="lastname") Nachname
+                            input#lastname(class="form__input", type="text", value=user.lastName)
+                        div(class="form__group")
+                            label(class="form__label", for="birthDate") Geburtsdatum
+                            input#birthDate(class="form__input", type="text", value=user.birthDate, readonly, style="background-color: lightgrey;")
+                        div(class="form__group")
+                            label(class="form__label", for="gender") Geschlecht
+                            select#gender(class="form__input", value=user.gender)
+                                option(value="male", selected=user.gender === 'male') Mann
+                                option(value="female", selected=user.gender === 'female') Frau
+                        div(class="form__group")
+                            label(class="form__label", for="language") Sprache
+                            select#language(class="form__input")
+                                option(value="en", selected=user.language === 'en') Englisch
+                                option(value="de", selected=user.language === 'de') Deutsch
+
+                        div(class="form__group")
+                            label(class="form__label", for="professional") Beruf (fiktiv)
+                            input#professional(class="form__input", type="text", value=user.professional, readonly, style="background-color: lightgrey;")
+                        div(class="form__group")
+                            label(class="form__label", for="role") Role
+                            input#role(class="form__input", type="text", value=user.role, readonly, style="background-color: lightgrey;")
+                        div(class="form__group")
+                            label(class="form__label", for="department") Abteilung(en) (fiktiv)
+                            input#department(class="form__input", type="text", value=user.department.join(', '), readonly, style="background-color: lightgrey;")
+                        //div(class="form__group")
+                            label(class="form__label", for="machinery") Machinery
+                            input#machinery(class="form__input", type="text", value=user.machinery.length > 0 ? user.machinery.map(machine => machine.name).join(', ') : "No machine", readonly, style="background-color: lightgrey;")
+
+                        .form__group.ma-bt-md
+                            label.form__label(for='email') E-Mail-Adresse
+                            input#email.form__input(type='email', value=`${user.email}`, name='email')
+                        .form__group.form__photo-upload
+                            img.form__user-photo(src=`/img/users/${user.photo}`, alt='User photo')
+
+                            input.form__upload(type='file', accept='image/*', id='photo', name='photo')
+                            label(for='photo') Wähle neues Foto
+
+                        .form__group.right
+                            button.btn.btn--small.btn--green Einstellungen speichern
+
+                .line &nbsp;
+
+                .user-view__form-container
+                    h2.heading-secondary.ma-bt-md Passwort- Änderung
+                    form.form.form-user-password
+                        .form__group
+                            label.form__label(for='password-current') Aktuelles Passwort
+                            input#password-current.form__input(type='password',autocomplete='current-password', placeholder='••••••••', required, minlength='8')
+                        .form__group
+                            label.form__label(for='password') Neues Passwort
+                            input#password.form__input(type='password', autocomplete='new-password', placeholder='••••••••',  required, minlength='8')
+                        .form__group.ma-bt-lg
+                            label.form__label(for='password-confirm') Neues Passwort bestätigen
+                            input#password-confirm.form__input(type='password', autocomplete='new-password', placeholder='••••••••', required, minlength='8')
+                        .form__group.right
+                            button.btn.btn--small.btn--green.btn--save-password Passwort speichern

@@ -1,0 +1,102 @@
+<rezept>
+    
+    <artikelnummer>10182331</artikelnummer>
+    <artikelname>MTT0201DA003 027.00x4.50-3.60</artikelname>
+    <teilenummer>MTT0201DA003</teilenummer>
+    <zeichnungsnummer>MTT0201DA003</zeichnungsnummer>
+    <aenderungsstand-zeichnung>16</aenderungsstand-zeichnung>
+    <aenderungsstand-rezept>1</aenderungsstand-rezept>
+    <beschreibung></beschreibung>
+    
+    <kommentar>
+	191115 MAT erstes Plateau verlaenger, Ausgleichstueck entfernt
+        22022016 JOS ZiehGeschw 11
+	
+    </kommentar>
+    
+    
+    <mindest-gutanteil>80</mindest-gutanteil>
+    
+    <dorn>
+      <dav>31</dav>
+      <div>21</div>
+      <angel>150 </angel>
+      <dan>27</dan>
+      <stufen>
+        <stufe>
+          <d>18.0</d>
+          <pos>0.0</pos>
+          <rampe-rein>30.0</rampe-rein>
+          <rampe-raus>26.0</rampe-raus>
+          <dehnung>0.92</dehnung>
+        </stufe>
+        <stufe>
+          <d>19.8</d>
+          <pos>45.0</pos>
+          <rampe-rein>30.0</rampe-rein>
+          <rampe-raus>26.0</rampe-raus>
+          <dehnung>1.08</dehnung>
+        </stufe>
+      </stufen>
+    </dorn>
+
+    <mehrfachlaenge>
+        <fixlaenge>1491</fixlaenge>
+        <ausgleichsstueck>30</ausgleichsstueck>
+        <mehrfachlaenge>6932</mehrfachlaenge>
+        <anzahl-fixlaengen-pro-mehrfachlaenge>6</anzahl-fixlaengen-pro-mehrfachlaenge>
+        <neg-tol-mehrfachlaenge>30</neg-tol-mehrfachlaenge>
+        <pos-tol-mehrfachlaenge>150</pos-tol-mehrfachlaenge>
+        <mindestanzahl-gutprofile>4</mindestanzahl-gutprofile>
+    </mehrfachlaenge>
+    
+    <standardwerte>
+        <obere-toleranz>0.15</obere-toleranz>
+        <untere-toleranz>0.25</untere-toleranz>
+        <mindest-gutanteil>80</mindest-gutanteil>
+    </standardwerte>
+    
+    <eckenliste>
+        <ecke>
+            <x>0</x>
+            <z>3.6</z>
+        </ecke>
+        <ecke>
+            <x>230</x>
+            <z>3.6</z>
+        </ecke>
+        <ecke>
+            <x>278</x>
+            <z>4.5</z>
+        </ecke>
+        <ecke>
+            <x>599</x>
+            <z>4.5</z>
+        </ecke>
+        <ecke>
+            <x>647</x>
+            <z>3.6</z>
+        </ecke>
+        <ecke>
+            <x>842</x>
+            <z>3.6</z>
+        </ecke>
+        <ecke>
+            <x>890</x>
+            <z>4.5</z>
+        </ecke>
+        <ecke>
+            <x>1205</x>
+            <z>4.5</z>
+        </ecke>
+        <ecke>
+            <x>1253</x>
+            <z>3.6</z>
+        </ecke>
+        <ecke>
+            <x>1541</x>
+            <z>3.6</z>
+        </ecke>
+    </eckenliste>
+    
+</rezept>

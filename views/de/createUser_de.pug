@@ -1,0 +1,118 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+    li(class=`${active ? 'side-nav--active' : ''}`)
+        a(href=`${link}`)
+            svg
+                use(xlink:href=`/img/icons.svg#icon-${icon}`)
+            | #{text}
+
+block content
+
+    main.main
+        .user-view
+            nav.user-view__menu
+
+                ul.side-nav
+                    +navItem('/api/v1/me', 'Meine Einstellung', 'settings', false)
+
+                - if(user.role === 'admin' || user.role === 'Chef')
+                    .admin-nav
+                        h5.admin-nav__heading CHEF
+                        ul.side-nav
+                            +navItem('/api/v1/txt_xml_fileuploader', 'txt-xml-Drag-&-Drop', 'file-plus', false)            
+
+                - if(user.role === 'admin' || user.role === 'Chef')
+                    .admin-nav
+                        h5.admin-nav__heading= `${user.role}`
+                        ul.side-nav
+                            +navItem('/api/v1/manage_users', 'Benutzerverwaltung', 'users', true)
+
+
+            .user-view__content
+                .user-view__form-container
+                    h2.heading-secondary.ma-bt-md Neuen Benutzer erstellen
+                    form.form.form-new-user-data
+                        div(class="form__group")
+                            label(class="form__label", for="employeeNumber") Mitarbeiter- Nummer
+                            input#employeeNumber(class="form__input" type="number" placeholder="70220" required="required" min="10000" max="99999")
+                        div(class="form__group")
+                            label(class="form__label", for="firstname") Vorname
+                            input#firstname(class="form__input", type="text", placeholder="Max", required="required")
+                        div(class="form__group")
+                            label(class="form__label", for="lastname") Nachname
+                            input#lastname(class="form__input", type="text", placeholder="Mustermann", required="required")
+                        div(class="form__group")
+                            label(class="form__label", for="birthDate") Geburtsdatum
+                            input#birthDate(class="form__input", type="text", placeholder="01.01.2002", required="required", pattern="^(0[1-9]|[1-2][0-9]|3[0-1])[.](0[1-9]|1[0-2])[.][0-9]{4}$")
+                        div(class="form__group")
+                            label(class="form__label", for="gender") Geschlecht
+                            select#gender(class="form__input")
+                                option(value="male") Mann
+                                option(value="Female") Frau
+                        div(class="form__group")
+                            label(class="form__label", for="language") Sprache
+                            select#language(class="form__input")
+                                option(value="en") Englisch
+                                option(value="de") Deutsch
+                        div(class="form__group")
+                            label(class="form__label", for="professional") Beruf (fiktiv)
+                            input#professional(class="form__input", type="text", placeholder="professional")
+                        div(class="form__group")
+                            label(class="form__label", for="email") E-Mail-Address
+                            input#email(class="form__input", type="email", placeholder="you@mubea.com")
+                        div(class="form__group ma-bt-md")
+                            label(class="form__label", for="password") Passwort
+                            input#password(class="form__input", type="password", placeholder="••••••••", required="required", minlength="8")
+                        div(class="form__group ma-bt-md")
+                            label(class="form__label", for="passwordConfirm") Passwort bestätigen
+                            input#passwordConfirm(class="form__input", type="password", placeholder="••••••••", required="required", minlength="8")
+                        div(class="form__group")
+                            label(class="form__label", for="role") Rolle
+                            select#role(class="form__input")
+                                option(value="user") User
+                                option(value="Unterhalt") Unterhalt
+                                option(value="Schichtleiter") Schichtleiter
+                                option(value="Chef") Chef
+
+                        //-div(class="form__group")
+                            label(class="form__label", for="department") Departments
+                            each department in [ 'Schweisserei', 'Zieherei', 'Anarbeit', 'Engineering', 'Konstruktion', 'Unterhalt', 'IT', 'Operations', 'Geschäfts-Führung' ]
+
+                                label(class="form__checkbox-label" style="display: block; margin-bottom: 10px; border: none")
+                                |
+                                input#department(class="form__checkbox-box", type="checkbox", name="departments", value=department, checked=checked,  style="width: 20px; height: 20px;")
+                                span(class="form__checkbox-name", style="font-size: 1.5rem;") #{department}
+                        div(class="form__group")
+                            label(class="form__label", for="department") Abteilung(en) (fiktiv)
+
+                            each department in [ 'Schweisserei', 'Zieherei', 'Anarbeit', 'Engineering', 'Konstruktion', 'Unterhalt', 'IT', 'Operations', 'Geschäfts-Führung' ]
+                                label(class="form__checkbox-label" style="display: block; margin-bottom: 10px; border: none")
+                                input(class="form__checkbox-box", type="checkbox", name="departments", value=department, checked=checked,  style="width: 20px; height: 20px;")
+                                span(class="form__checkbox-name", style="font-size: 1.5rem;") #{department}
+        
+
+                        div(class="form__group")
+                            //-button.btn.btn--green(onclick="getSelectedDepartments()") Save
+                            button.btn.btn--green Speichern
+                            a.btn-space
+                            a.btn.btn--small.btn--gray(href=`/api/v1/manage_users`) Abbrechen
+
+                        script.
+
+                            function getSelectedDepartments() {
+                                const departmentCheckboxes = document.querySelectorAll('input[name="departments"]');
+                                let selectedDepartments = [];
+                                departmentCheckboxes.forEach((checkbox) => {
+                                    if (checkbox.checked) {
+                                        selectedDepartments.push(checkbox.value);
+                                    }
+                                });
+                                if (selectedDepartments.length > 0) {
+                                    console.log(selectedDepartments + " sind angewählt");
+                                    alert("Angewählte Abteilungen: "+selectedDepartments)
+                                    document.querySelector('#department').value = selectedDepartments;
+                                } else {
+                                    alert('Please select at least one department.');
+                                }
+                            }

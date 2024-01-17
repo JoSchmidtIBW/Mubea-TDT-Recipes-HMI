@@ -1,0 +1,94 @@
+[
+    {
+        "kopfDaten": {
+            "artikelnummer": 10183037,
+            "artikelname": "MTT0106DC013 029.50x4.40-3.40",
+            "teilenummer": "MTT0106DC013",
+            "zeichnungsnummer": "MTT0106DC013",
+            "aenderungsstand-zeichnung": 16,
+            "aenderungsstand-rezept": 5,
+            "beschreibung": "",
+            "kommentar": [
+                {
+                    "createdAt": "2023-10-16T05:52:11.936+00:00",
+                    "person": "mister x",
+                    "comment": "Bla bla",
+                    "ziehGeschwindigkeit": "15m/min"
+                }
+            ]    
+        },
+        "rohrWerte": {
+            "mindest-gutanteil": 80,
+            "profile-gekoppelt": 2
+        },
+        "dornWerte": {
+            "dav": 34.70,
+            "div": 24.70,
+            "angel": 150,
+            "dan": 29.50,
+            "stufen": {
+                "stufe": [
+                    {
+                        "d": 20.70,
+                        "pos": 0.0,
+                        "rampe-rein": 30.0,
+                        "rampe-raus": 26.0,
+                        "dehnung": 1.0
+                    },
+                    {
+                        "d": 22.60,
+                        "pos": 45.0,
+                        "rampe-rein": 30.0,
+                        "rampe-raus": 26.0,
+                        "dehnung": 0
+                    }
+                ]
+            }
+        },
+        "mehrfachlaengenDaten": {
+            "fixlaenge": 1360,
+            "ausgleichstueck": 30,
+            "mehrfachlaenge": 6932,
+            "anzahl-fixlaengen-pro-mehrfachlaenge": 6,
+            "neg-tol-mehrfachlaenge": 30,
+            "pos-tol-mehrfachlaenge": 150,
+            "mindestanzahl-gutprofile": 3
+        },
+        "standartWerte": {
+            "obere-toleranz": 0.15,
+            "untere-toleranz": 0.15
+        },
+        "eckenListe": {
+            "ecke": [
+                {
+                    "x": 0,
+                    "z": 4.40
+                },
+                {
+                    "x": 488,
+                    "z": 4.40
+                },
+                {
+                    "x": 508,
+                    "z": 3.45
+                },
+                {
+                    "x": 969,
+                    "z": 3.45
+                },
+                {
+                    "x": 971,
+                    "z": 3.90
+                },
+                {
+                    "x": 989,
+                    "z": 4.40
+                },
+                {
+                    "x": 1360,
+                    "z": 4.40
+                }
+            ]
+        } 
+    }
+]

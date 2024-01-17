@@ -1,0 +1,108 @@
+extends base
+
+mixin navItem(link, text, icon, active)
+    li(class=`${active ? 'side-nav--active' : ''}`)
+        a(href=`${link}`)
+            svg
+                use(xlink:href=`/img/icons.svg#icon-${icon}`)
+            | #{text}
+
+block content
+    main.main
+        .user-viewAccount
+            nav.user-view__menu
+
+                ul.side-nav
+                    +navItem('#', 'My Settings', 'settings', true)
+                //- if(user.role === 'admin' || user.role === 'Chef' || user.role === 'Schichtleiter' || user.role === 'user')
+                //-- if(user.role === 'admin' || user.role === 'Chef')
+                    ul.side-nav
+                       +navItem('/api/v1/txt_xml_fileuploader', 'txt-xml-Drag-&-Drop', 'file-plus')
+                //-ul.side-nav
+                    a.button(href='/documentations/MubeaTrack-Instruction_manual.pdf', target='_blank') Instruction manual
+
+                - if(user.role === 'admin' || user.role === 'Chef')
+                    .admin-nav
+                        h5.admin-nav__heading CHEF
+                        ul.side-nav
+                            +navItem('/api/v1/txt_xml_fileuploader', 'txt-xml-Drag-&-Drop', 'file-plus', false)
+
+                - if(user.role === 'admin' || user.role === 'Chef')
+                    .admin-nav
+                        h5.admin-nav__heading= `${user.role}`
+                        ul.side-nav
+                            +navItem('/api/v1/manage_users', 'Manage users', 'users')
+                            //+navItem('/api/v1/manage_machinery', 'Manage machinery', 'machine')
+                            //+navItem('/api/v1/manage_user-machine', 'Manage user/machine', 'user-m')
+                            //+navItem('/api/v1/manage_ASMAmachine', 'Manage ASMA/machine', 'machine-asma')
+
+            .user-view__content
+                .user-view__form-container
+                    h2.heading-secondary.ma-bt-md Your account settings
+
+                    form.form.form-user-data
+                        input#userId(type="hidden", value=`${user._id}`)
+                        div(class="form__group")
+                            label(class="form__label", for="employeeNumber") Employee Number
+                            input#employeeNumber(class="form__input", type="number", value=user.employeeNumber, readonly, style="background-color: lightgrey;")
+                        div(class="form__group")
+                            label(class="form__label", for="firstname") Firstname
+                            input#firstname(class="form__input", type="text", value=user.firstName)
+                        div(class="form__group")
+                            label(class="form__label", for="lastname") Lastname
+                            input#lastname(class="form__input", type="text", value=user.lastName)
+                        div(class="form__group")
+                            label(class="form__label", for="birthDate") Birth date
+                            input#birthDate(class="form__input", type="text", value=user.birthDate, readonly, style="background-color: lightgrey;")
+                        div(class="form__group")
+                            label(class="form__label", for="gender") Gender
+                            select#gender(class="form__input", value=user.gender)
+                                option(value="male", selected=user.gender === 'male') Male
+                                option(value="female", selected=user.gender === 'female') Female
+                        div(class="form__group")
+                            label(class="form__label", for="language") Language
+                            select#language(class="form__input")
+                                option(value="en", selected=user.language === 'en') English
+                                option(value="de", selected=user.language === 'de') German
+
+                        div(class="form__group")
+                            label(class="form__label", for="professional") Professional (fictional)
+                            input#professional(class="form__input", type="text", value=user.professional, readonly, style="background-color: lightgrey;")
+                        div(class="form__group")
+                            label(class="form__label", for="role") Role
+                            input#role(class="form__input", type="text", value=user.role, readonly, style="background-color: lightgrey;")
+                        div(class="form__group")
+                            label(class="form__label", for="department") Department(s) (fictional)
+                            input#department(class="form__input", type="text", value=user.department.join(', '), readonly, style="background-color: lightgrey;")
+                        //div(class="form__group")
+                            label(class="form__label", for="machinery") Machinery
+                            input#machinery(class="form__input", type="text", value=user.machinery.length > 0 ? user.machinery.map(machine => machine.name).join(', ') : "No machine", readonly, style="background-color: lightgrey;")
+
+                        .form__group.ma-bt-md
+                            label.form__label(for='email') Email address
+                            input#email.form__input(type='email', value=`${user.email}`, name='email')
+                        .form__group.form__photo-upload
+                            img.form__user-photo(src=`/img/users/${user.photo}`, alt='User photo')
+
+                            input.form__upload(type='file', accept='image/*', id='photo', name='photo')
+                            label(for='photo') Choose new photo
+
+                        .form__group.right
+                            button.btn.btn--small.btn--green Save settings
+
+                .line &nbsp;
+
+                .user-view__form-container
+                    h2.heading-secondary.ma-bt-md Password change
+                    form.form.form-user-password
+                        .form__group
+                            label.form__label(for='password-current') Current password
+                            input#password-current.form__input(type='password',autocomplete='current-password', placeholder='••••••••', required, minlength='8')
+                        .form__group
+                            label.form__label(for='password') New password
+                            input#password.form__input(type='password', autocomplete='new-password', placeholder='••••••••',  required, minlength='8')
+                        .form__group.ma-bt-lg
+                            label.form__label(for='password-confirm') Confirm password
+                            input#password-confirm.form__input(type='password', autocomplete='new-password', placeholder='••••••••', required, minlength='8')
+                        .form__group.right
+                            button.btn.btn--small.btn--green.btn--save-password Save password

@@ -1,0 +1,1053 @@
+extends base
+
+//-mixin navItem(link, text, icon, active)
+  li(class=`${active ? 'side-nav--active' : ''}`)
+    a(href=`${link}`)
+      svg
+        use(xlink:href=`/img/icons.svg#icon-${icon}`)
+      | #{text}
+
+block content 
+    main.main 
+        h1 create2_St_2_BSB
+        h2 Zwei-Stufen-2-BSB- Rezept-Erstellung
+        br
+        br
+        .user-view
+            //-nav.user-view__menu
+
+            //-ul.side-nav
+                    +navItem('#', 'My Settings', 'settings', true)
+                    +navItem('#', 'My ASMA-error reports', 'user-error-report')
+
+            //- if(user.role === 'admin' || user.role === 'Chef')
+                .admin-nav
+                    h5.admin-nav__heading= `${user.role}`
+                    ul.side-nav
+                    +navItem('/api/v1/manage_users', 'Manage users', 'users')
+                    +navItem('/api/v1/manage_machinery', 'Manage machinery', 'machine')
+                    +navItem('/api/v1/manage_user-machine', 'Manage user/machine', 'user-m')
+                    +navItem('/api/v1/manage_ASMAmachine', 'Manage ASMA/machine', 'machine-asma')
+
+            .user-view__content
+                .user-view__form-container
+                    h2.heading-secondary.ma-bt-md Create Zwei-Stufen-2-BSB- Rezept
+                    form.form.form-createRecipe-2_St_2_BSB-data
+                        div(class="form__group" style="background-color: green;") kopfDaten
+                            label(class="form__label", for="artikelNummer") ArtikelNummer / Materialnummer
+                            
+                            input#artikelNummer(class="form__input" type="number" placeholder="10191122" required="required" min="10000000" max="99999999" onblur="validateArtikelNummer(this)")
+                        div(class="form__group")
+                            label(class="form__label", for="artikelName") ArtikelName
+                            //input#artikelName(class="form__input", type="text", placeholder="19.00x2.40-1.80", required="required")
+                            //input#artikelName(class="form__input", type="text", placeholder="19.00x2.40-1.80", required="required", pattern="^\d{2}\.\d{2}x\d\.\d{2}-\d\.\d{2}$")
+                            //input#birthDate(class="form__input", type="text", placeholder="01.01.2002", required="required", pattern="^(0[1-9]|[1-2][0-9]|3[0-1])[.](0[1-9]|1[0-2])[.][0-9]{4}$")
+                            input#artikelName(class="form__input", type="text", placeholder="19.00x2.40-1.80", required="required", pattern="^\\d{2}\\.\\d{2}x\\d\\.\\d{2}-\\d\\.\\d{2}$", onblur="validateArtikelName(this)")
+                            //input#artikelName(class="form__input", type="text", placeholder="19.00x2.40-1.80", required="required" pattern="^\d{2}\.\d{2}x\d\.\d{2}-\d\.\d{2}$")
+                            //input#artikelName(class="form__input", type="text", placeholder="19.00x2.40-1.80", required="required" oninput="validateArtikelName(this)")
+                        div(class="form__group")
+                            label(class="form__label", for="ziehGeschwindigkeit") Zieh-Geschwindigkeit (m/min)
+                            input#ziehGeschwindigkeit(class="form__input", type="number", placeholder="15",required="required" min="5" max="50" onblur="validateZiehGeschwindigkeit(this)")
+                        div(class="form__group")
+                            br
+                            br
+                            label(class="form__label", for="benutzerVorName") Vorname
+                            //h1= user.firstName
+                            input#benutzerID(class="form__input" type="hidden" value=user._id style="background-color: lightgreen;")
+                            input#benutzerVorName(class="form__input" type="text" value=user.firstName readOnly=true style="background-color: #E8F0FE;")
+                            //input#benutzerVorName(class="form__input", type="text", placeholder="", required="required" minlength="1", maxlength="20")
+                            br
+                            label(class="form__label", for="benutzerNachName") Nachname 
+                            input#benutzerNachName(class="form__input" type="text" value=user.lastName readOnly=true style="background-color: #E8F0FE;") 
+                            //input#benutzerNachName(class="form__input", type="text", placeholder="",required="required" minlength="1", maxlength="20")
+                        div(class="form__group")
+                            button.btn.btn--green(id="nextButtonKopfdaten" type="button" onclick="saveDataKopfDaten()") Next
+                            a.btn-space
+                            a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonKopfdaten") Cancel
+                        
+                        div(class="form__group") Dorn- Werte
+                            label#labelRohrAussenDurchmesserLetzterZug(class="form__label", for="rohrAussenDurchmesserLetzterZug" style="display: none;")
+                                | Einsatzrohr- Aussen-
+                                span.form__label-diameter-symbol &empty;
+                                |   (AD-Letzter Zug --> Vorzug beachten!)         
+                            input#rohrAussenDurchmesserLetzterZug(class="form__input", type="text", placeholder="zB. 41.00 (Vorzug beachten! zB. 31.00)",style="display: none;", required="required", pattern="^(0[1-9]|[1-9][0-9]|1[0-9][0-9])[.](0[0-9]|1[0-9]|[2-9][0-9])$", onblur="validateRohrAussenDurchmesserLetzterZug(this)")
+                        div(class="form__group")
+                            label#labelRohrWandDickeAussenDurchmesserLetzterZug(class="form__label", for="rohrWandDickeAussenDurchmesserLetzterZug" style="display: none;")
+                                | Einsatzrohr- Wanddicke
+                                |   (WD-Letzter Zug --> Vorzug beachten!)  
+                            input#rohrWandDickeAussenDurchmesserLetzterZug(class="form__input", type="text", placeholder="zB. 5.60 (Vorzug beachten! zB. 4.20)",style="display: none;", required="required", pattern="^(0?[1-9]|9)[.](0[0-9]|1[0-9]|[2-9][0-9])$", onblur="validateRohrWandDickeAussenDurchmesserLetzterZug(this)")
+                        div(class="form__group")
+                            label#labelRohrInnenDurchmesserLetzterZugBerechnet(class="form__label", for="rohrInnenDurchmesserLetzterZugBerechnet" style="display: none;") RohrInnenDurchmesserLetzterZugBerechnet (aussendurchmesser - 2 x Wanddicke letzter Zug)
+                            input#rohrInnenDurchmesserLetzterZugBerechnet(class="form__input", type="number", style="display: none;", required="required")     
+                        div(class="form__group")
+                            label#labelRohrAussenDurchmesserTDTZug(class="form__label", for="rohrAussenDurchmesserTDTZug" style="display: none;") Rohr- Aussendurchmesser TDT-Zug
+                            input#rohrAussenDurchmesserTDTZug(class="form__input", type="number", style="display: none;", required="required")
+                        div(class="form__group")
+                            label#labelAngel(class="form__label", for="angel" style="display: none;") Angel          
+                            input#angel(class="form__input", type="number", placeholder="150 (ist Standart)",style="display: none;", required="required", min="150" max="1000", onblur="validateAngel(this)")    
+                            br
+                            br
+                        div(class="form__group" id="groupDornWerte1Button" style="display: none;")
+                            //div(class="form__group" id="groupDornWerte1Button" )
+                            //- button.btn.btn--green(id="nextButtonDornWerte1" type="button" onclick="saveDataDornWerte1()" style="display: none;") Next
+                            //- a.btn-space
+                            //- //(id="spaceDornWerte1" style="display: none;")
+                            //- a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonDornWerte1" style="display: none;") Cancel
+                            button.btn.btn--green(id="nextButtonDornWerte1" type="button" onclick="saveDataDornWerte1()" ) Next
+                            a.btn-space
+                            a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonDornWerte1") Cancel
+                            
+
+
+
+                        
+                        div(class="form__group") Dorn- Stufen
+                            label#labelDornDurchmesserErsteStufe(class="form__label", for="dornDurchmesserErsteStufe" style="display: none;")= `Dorndurchmesser erste Stufe (theoretisch: ${dornDurchmesserErsteStufeBerechnet} )`
+                            input#dornDurchmesserErsteStufe(class="form__input", type="text", style="display: none;" placeholder="Kleiner Durchmesser",required="required"  pattern="^(0[1-9]|[1-9][0-9]|1[0-9][0-9])[.](0[0-9]|1[0-9]|[2-9][0-9])$" onblur="validateDornDurchmesserErsteStufe(this)")        
+                        div(class="form__group")
+                            label#labelDornPositionErsteStufe(class="form__label", for="dornPositionErsteStufe" style="display: none;") Dorn- Position erste Stufe
+                            input#dornPositionErsteStufe(class="form__input", type="number",readOnly = true, style="display: none;" placeholder="",required="required" value='0' min="0" max="0" )
+                            //onblur="validateDornPositionErsteStufe(this)"    
+                        div(class="form__group")
+                            label#labelDornDurchmesserZweiteStufe(class="form__label", for="dornDurchmesserZweiteStufe" style="display: none;")= `Dorndurchmesser zweite Stufe (theoretisch: ${dornDurchmesserZweiteStufeBerechnet} )`
+                            input#dornDurchmesserZweiteStufe(class="form__input", type="text", style="display: none;" placeholder="grosser Durchmesser",required="required", pattern="^(0[1-9]|[1-9][0-9]|1[0-9][0-9])[.](0[0-9]|1[0-9]|[2-9][0-9])$" onblur="validateDornDurchmesserZweiteStufe(this)")    
+                        div(class="form__group")
+                            label#labelDornPositionZweiteStufe(class="form__label", for="dornPositionZweiteStufe" style="display: none;") Dorn- Position zweite Stufe "-->" Dorn mit Massstab messen...!
+                            input#dornPositionZweiteStufe(class="form__input", type="number", style="display: none;" placeholder="+ 1 bis 2mm zusätzlich (länger) beim Dornbereich der dünnen Wanddicke",required="required" min="10" max="99" onblur="validateDornPositionZweiteStufe(this)")                                    
+                            br
+                            br
+                        div(class="form__group" id="groupDornStufenWerte1Button" style="display: none;") 
+                            //div(class="form__group" id="groupDornStufenWerte1Button" )    
+                            button.btn.btn--green(id="nextButtonDornStufenWerte1" type="button" onclick="saveDataDornStufenWerte()") Next
+                            a.btn-space
+                            a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonDornWerte1") Cancel
+
+                        div(class="form__group") Mehrfachlängen- Daten
+                            label#labelFixlaenge(class="form__label", for="fixlaenge" style="display: none;") Fixlänge
+                            input#fixlaenge(class="form__input", type="number", style="display: none;" placeholder="zb 1360",required="required" min="30" max="2500" onblur="validateFixlaenge(this)")    
+                        div(class="form__group")
+                            label#labelAusgleichstueck(class="form__label", for="ausgleichstueck" style="display: none;") Ausgleichstueck
+                            input#ausgleichstueck(class="form__input", type="number", style="display: none;" placeholder="zb 30",required="required" min="1" max="100" onblur="validateAusgleichstueck(this)")
+                        div(class="form__group")
+                            label#labelMehrfachlaenge(class="form__label", for="mehrfachlaenge" style="display: none;") Mehrfachlänge (Muss nicht so genau sein)
+                            input#mehrfachlaenge(class="form__input", type="number", style="display: none;" placeholder="zb 8500",required="required" min="5000" max="13000" onblur="validateMehrfachlaenge(this)")
+                        div(class="form__group")
+                            label#labelAnzahlFixlaengenProMehrfachlaenge(class="form__label", for="anzahlFixlaengenProMehrfachlaenge" style="display: none;") Anzahl Fixlängen pro Mehrfachlänge (sollte eine zusätzlich haben bei 6 --> 7)
+                            input#anzahlFixlaengenProMehrfachlaenge(class="form__input", type="number", style="display: none;" placeholder="+ 1 zusätzlich",required="required" min="3" max="25" onblur="validateAnzahlFixlaengenProMehrfachlaenge(this)")
+                            br
+                            br
+                        div(class="form__group" id="groupMehrfachlaengenDatenButton" style="display: none;")    
+                            button.btn.btn--green(id="nextButtonMehrfachlaengenDaten" type="button" onclick="saveDataMehrfachlaengenDaten()") Next
+                            a.btn-space
+                            a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonMehrfachlaengenDaten") Cancel
+
+                        div(class="form__group") Rohr- Werte
+                            label#labelMindestGutanteil(class="form__label", for="mindestGutanteil" style="display: none;") Mindest- Gutanteil
+                            input#mindestGutanteil(class="form__input", type="number", style="display: none;" value = 80, required="required", readOnly = true )
+                        div(class="form__group")
+                            label#labelProfileGekoppelt(class="form__label", for="profileGekoppelt" style="display: none;") Profile gekoppelt
+                            input#profileGekoppelt(class="form__input", type="number", style="display: none;" placeholder="1 = Standart oder max 2",required="required" min="1" max="2" onblur="validateProfileGekoppelt(this)")    
+                            br
+                            br
+                        div(class="form__group" id="groupRohrWerteButton" style="display: none;")    
+                            button.btn.btn--green(id="nextButtonRohrWerte" type="button" onclick="saveDataRohrWerte()") Next
+                            a.btn-space
+                            a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonRohrWerte") Cancel   
+
+                        div(class="form__group") Standart- Werte
+                            label#labelObereToleranz(class="form__label", for="obereToleranz" style="display: none;") Obere- Toleranz
+                            input#obereToleranz(class="form__input", type="number", style="display: none;" value="0.15",required="required", readOnly = true )        
+                        div(class="form__group")
+                            label#labelUntereToleranz(class="form__label", for="untereToleranz" style="display: none;") Untere- Toleranz
+                            input#untereToleranz(class="form__input", type="number", style="display: none;" value="0.15",required="required", readOnly = true )
+                            br
+                            br
+                        div(class="form__group" id="groupStandartWerteButton" style="display: none;")    
+                            button.btn.btn--green(id="nextButtonStandartWerte" type="button" onclick="saveDataStandartWerte()") Next
+                            a.btn-space
+                            a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonStandartWerte") Cancel
+
+                        div(class="form__group") Ecken- Liste
+                            br
+                            br
+                            div(class="form__group" id="ecke0" style="display: none;") Ecken-0
+                                label#labelWanddickeEcke0(class="form__label", for="wanddickeEcke0") 0 - Wanddicke - 0
+                                input#wanddickeEcke0(class="form__input", type="number", required="required", readOnly = true style="background-color: #E8F0FE;")                               
+                                br
+                                label#labelPositionEcke0(class="form__label", for="positionEcke0") 0 - Position - 0
+                                input#positionEcke0(class="form__input", type="number", value= 0 required="required", readOnly = true style="background-color: #E8F0FE;")
+                                br
+                            div(class="form__group" id="ecke1" style="display: none;") Ecken-1
+                                label#labelWanddickeEcke1(class="form__label", for="wanddickeEcke1") 1 - Wanddicke - 1
+                                input#wanddickeEcke1(class="form__input", type="number", required="required", readOnly = true style="background-color: #E8F0FE;")                               
+                                br
+                                label#labelPositionEcke1(class="form__label", for="positionEcke1") 1 - Position - 1
+                                input#positionEcke1(class="form__input", type="number", min=10, max=2500, plaseholder="" required="required", onblur="validateEckenPositionMinMax1(this)")
+                                br
+                            div(class="form__group" id="ecke2" style="display: none;") Ecken-2
+                                label#labelWanddickeEcke2(class="form__label", for="wanddickeEcke2") 2 - Wanddicke - 2
+                                input#wanddickeEcke2(class="form__input", type="number", required="required", readOnly = true style="background-color: #E8F0FE;")                               
+                                br
+                                label#labelPositionEcke2(class="form__label", for="positionEcke2") 2 - Position - 2
+                                input#positionEcke2(class="form__input", type="number", min=10, max=2500, required="required", onblur="validateEckenPositionMinMax2(this)")
+                                br
+                            div(class="form__group" id="ecke3" style="display: none;") Ecken-3
+                                label#labelWanddickeEcke3(class="form__label", for="wanddickeEcke3") 3 - Wanddicke - 3
+                                input#wanddickeEcke3(class="form__input", type="number", required="required", readOnly = true, style="background-color: #E8F0FE;")                               
+                                br
+                                label#labelPositionEcke3(class="form__label", for="positionEcke3") 3 - Position - 3
+                                input#positionEcke3(class="form__input", type="number", min=10, max=2500, required="required", onblur="validateEckenPositionMinMax3(this)")
+                                br
+                            div(class="form__group" id="ecke3Zwischen4" style="display: none;") 3-4 Zwischenecke 3-4 
+                                label#labelWanddickeEcke3Zwischen4(class="form__label", for="wanddickeEcke3Zwischen4") 3-4 - Zwischenwanddicke - 3-4
+                                input#wanddickeEcke3Zwischen4(class="form__input", type="number", required="required", readOnly = true )                               
+                                br
+                                label#labelPositionEcke3Zwischen4(class="form__label", for="positionEcke3Zwischen4") 3-4 - Zwischenposition - 3-4
+                                input#positionEcke3Zwischen4(class="form__input", type="number", min=10, max=2500, required="required")
+                                br    
+                            div(class="form__group" id="ecke4" style="display: none;") Ecken-4
+                                label#labelWanddickeEcke4(class="form__label", for="wanddickeEcke4") 4 - Wanddicke - 4 
+                                input#wanddickeEcke4(class="form__input", type="number", required="required", readOnly = true style="background-color: #E8F0FE;")                               
+                                br
+                                label#labelPositionEcke4(class="form__label", for="positionEcke4") 4 - Position - 4
+                                input#positionEcke4(class="form__input", type="number", min=10, max=2500, required="required", onblur="validateEckenPositionMinMax4(this)")
+                                br
+                            div(class="form__group" id="eckeEnde" style="display: none;") Ecken-Ende
+                                label#labelWanddickeEckeEnde(class="form__label", for="wanddickeEckeEnde") Ende - Wanddicke - Ende
+                                input#wanddickeEckeEnde(class="form__input", type="number", required="required", readOnly = true style="background-color: #E8F0FE;")                               
+                                br
+                                label#labelPositionEckeEnde(class="form__label", for="positionEckeEnde") Ende - Position - Ende
+                                input#positionEckeEnde(class="form__input", type="number", required="required", readOnly = true style="background-color: #E8F0FE;")
+                                br          
+                        div(class="form__group" id="groupEckenListeButton" style="display: none;")    
+                            button.btn.btn--green(id="nextButtonEckenListe" type="button" onclick="saveDataEckenListe()") Next
+                            a.btn-space
+                            a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonEckenListe") Cancel
+
+                        div(class="form__group" id="groupSaveRecipeButton" style="display: none;")    
+                            button.btn.btn--green.btnSaveRecipe(id="saveButtonRecipe" type="submit" onclick="saveDataRecipe()") Save
+                            a.btn-space
+                            a.btn-space
+                            a.btn-space
+                            a.btn-space
+                            a.btn-space
+                            a.btn-space
+                            a.btn-space
+                            a.btn-space
+                            a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonRecipe") Cancel      
+        br
+        br                    
+        a.btn.btn--small.btn--green(href="/api/v1/createRecipeOverview") Zurück CreateRecipeOverview 
+
+
+
+        script.
+            let artikelNummer = '';
+            let artikelName = '';
+
+            let wanddickeBig = '';
+            let wanddickeSmall = '';
+
+            let dornDurchmesserErsteStufeBerechnet = '';
+            let dornDurchmesserZweiteStufeBerechnet = '';
+
+            let fixlaengeEnde = '';
+            
+
+            //- let dornDurchmesserErsteStufeFloat = '';
+            //- let dornDurchmesserZweiteStufeFloat = '';
+            //- let dornPositionZweiteStufe = '';
+
+            function displayMessage_isError_isSuccess(message, isError) {
+                const markup = `<div class="alert ${isError ? 'alert--error' : 'alert--success'}" >${message}</div>`;
+
+                const tempElement = document.createElement('div');
+                tempElement.innerHTML = markup;
+
+                const messageElement = tempElement.firstElementChild;
+
+                document.body.insertBefore(messageElement, document.body.firstChild);
+
+                setTimeout(() => {
+                    messageElement.remove();
+                }, 2000);
+            }
+
+            function validateArtikelNummer(inputArtikelNummer) {
+                console.log("Bin validateArtikelNummer")
+                let regexArtikelNummer = /^\d{8}$/;
+
+                if (!regexArtikelNummer.test(inputArtikelNummer.value)) {
+                    displayMessage_isError_isSuccess('Die Artikelnummer muss aus einer 8-stelligen Zahl bestehen!', true);
+                    inputArtikelNummer.value = ''; 
+                }
+            }
+
+            function validateZiehGeschwindigkeit(inputZiehGeschwindigkeit) {
+                console.log("Bin validateZiehGeschwindigkeit")
+                let zgMax = 50;
+                let zgMin = 5;
+
+                if (inputZiehGeschwindigkeit.value > 50 || inputZiehGeschwindigkeit.value < 5) {
+                    displayMessage_isError_isSuccess('Eingabe Ziehgeschwindigkeit muss kontrolliert werden!', true);
+                    inputZiehGeschwindigkeit.value = ''; 
+                }
+            }
+
+            function validateArtikelName(inputArtikelName) {
+                let pattern = /^\d{2}\.\d{2}x\d\.\d{2}-\d\.\d{2}$/;
+
+                if (pattern.test(inputArtikelName.value)) {
+                    let artikelNameArr = inputArtikelName.value.split(/x|-/);
+                    let rohrDurchmesser = parseFloat(artikelNameArr[0])
+                    console.log("rohrDurchmesser: "+rohrDurchmesser)
+                    let ersteWanddicke = parseFloat(artikelNameArr[1]);
+                    console.log("ersteWanddicke: "+ersteWanddicke)
+                    wanddickeBig = ersteWanddicke;
+                    console.log("wanddickeBig: "+wanddickeBig)
+                    let zweiteWanddicke = parseFloat(artikelNameArr[2]);
+                    console.log("zweiteWanddicke: "+zweiteWanddicke)
+                    wanddickeSmall = zweiteWanddicke;
+                    console.log("wanddickeSmall: "+wanddickeSmall)
+
+                    dornDurchmesserErsteStufeBerechnet = parseFloat(rohrDurchmesser - (2 * ersteWanddicke));
+                    console.log("dornDurchmesserErsteStufeBerechnet: "+dornDurchmesserErsteStufeBerechnet);
+                    document.getElementById('labelDornDurchmesserErsteStufe').innerText = `Dorndurchmesser erste Stufe (theoretisch: ${dornDurchmesserErsteStufeBerechnet} )`;//updateLabelDornDurchmesserErsteStufeText();
+
+                    dornDurchmesserZweiteStufeBerechnet = parseFloat(rohrDurchmesser - (2 * zweiteWanddicke));
+                    console.log("dornDurchmesserZweiteStufeBerechnet: "+dornDurchmesserZweiteStufeBerechnet);
+                    document.getElementById('labelDornDurchmesserZweiteStufe').innerText = `Dorndurchmesser zweite Stufe (theoretisch: ${dornDurchmesserZweiteStufeBerechnet} )`;//updateLabelDornDurchmesserErsteStufeText();
+
+
+                    if(rohrDurchmesser<18 || rohrDurchmesser>48){
+                        displayMessage_isError_isSuccess('Rohrdurchmesser kleiner als 18 oder grösser als 48!', true)
+                        inputArtikelName.value = '';
+                    }
+
+                    if (ersteWanddicke <= zweiteWanddicke) {
+                        displayMessage_isError_isSuccess('Die erste Wanddicke muss größer sein als die letzte Wanddicke!', true);
+                        inputArtikelName.value = ''; 
+                    }
+                } else {
+                    displayMessage_isError_isSuccess('Ungültiges Format-Eingabe bei ArtikelName. Bitte geben Sie die Zahlen im richtigen Format ein.', true);
+                    inputArtikelName.value = ''; 
+                }
+            }
+
+            function validateRohrAussenDurchmesserLetzterZug(inputRohrAussenDurchmesserLetzterZug){
+                let minRohrAussenDurchmesserLetzterZug = 20;
+                let maxRohrAussenDurchmesserLetzterZug = 80;
+                console.log("bin validateRohrAussenDurchmesserLetzterZug, die Eingabe muss noch in eine Number umgewandelt werden")
+                let patternRohrAussenDurchmesserLetzterZug = /^(0[1-9]|[1-9][0-9]|1[0-9][0-9])[.](0[0-9]|1[0-9]|[2-9][0-9])$/;
+
+                if(patternRohrAussenDurchmesserLetzterZug.test(inputRohrAussenDurchmesserLetzterZug.value)){
+                    let inputRohrAussenDurchmesserLetzterZugStr = inputRohrAussenDurchmesserLetzterZug.value;
+                    let inputRohrAussenDurchmesserLetzterZugFloat =  parseFloat(inputRohrAussenDurchmesserLetzterZugStr);
+                    console.log("inputRohrAussenDurchmesserLetzterZugFloat: "+inputRohrAussenDurchmesserLetzterZugFloat)
+                    if(inputRohrAussenDurchmesserLetzterZugFloat > maxRohrAussenDurchmesserLetzterZug || inputRohrAussenDurchmesserLetzterZugFloat < minRohrAussenDurchmesserLetzterZug){
+                        displayMessage_isError_isSuccess('RohrAussenDurchmesserLetzterZug zu gross oder zu klein', true);
+                        inputRohrAussenDurchmesserLetzterZug.value = ''; 
+                    }                
+                } else {
+                    displayMessage_isError_isSuccess('Ungültiges Format-Eingabe bei RohrAussenDurchmesserLetzterZug. Bitte geben Sie die Zahlen im richtigen Format ein.', true);
+                    inputRohrAussenDurchmesserLetzterZug.value = ''; 
+                }
+            }
+
+            function validateRohrWandDickeAussenDurchmesserLetzterZug(inputRohrWandDickeAussenDurchmesserLetzterZug){
+                console.log("bin validateRohrWandDickeAussenDurchmesserLetzterZug, die Eingabe muss noch in eine Number umgewandelt werden")
+                let patternRohrWandDickeAussenDurchmesserLetzterZug = /^(0?[1-9]|9)[.](0[0-9]|1[0-9]|[2-9][0-9])$/;
+
+                if(patternRohrWandDickeAussenDurchmesserLetzterZug.test(inputRohrWandDickeAussenDurchmesserLetzterZug.value)){
+                    let inputRohrWandDickeAussenDurchmesserLetzterZugStr = inputRohrWandDickeAussenDurchmesserLetzterZug.value;
+                    let inputRohrWandDickeAussenDurchmesserLetzterZugFloat =  parseFloat(inputRohrWandDickeAussenDurchmesserLetzterZugStr);
+                    console.log("inputRohrWandDickeAussenDurchmesserLetzterZugFloat: "+inputRohrWandDickeAussenDurchmesserLetzterZugFloat)
+                    if(inputRohrWandDickeAussenDurchmesserLetzterZugFloat<= 1){
+                        displayMessage_isError_isSuccess('inputRohrWandDickeAussenDurchmesserLetzterZug zu klein!', true);
+                        inputRohrWandDickeAussenDurchmesserLetzterZug.value = ''; 
+                    }         
+                } else {
+                    displayMessage_isError_isSuccess('Ungültiges Format-Eingabe bei RohrWandDickeAussenDurchmesserLetzterZug. Bitte geben Sie die Zahlen im richtigen Format ein.', true);
+                    inputRohrWandDickeAussenDurchmesserLetzterZug.value = ''; 
+                }
+            }
+
+            function validateAngel(inputAngel){
+                let angelNumber = inputAngel.value;
+
+                let minAngel = 150;
+                let maxAngel = 1000;
+
+                if(angelNumber < minAngel || angelNumber > maxAngel){
+                    displayMessage_isError_isSuccess('Angel zu klein oder zu gross!.', true);
+                    inputAngel.value = ''; 
+                }
+            }
+
+            function validateDornDurchmesserErsteStufe(inputDornDurchmesserErsteStufe){
+                
+                patternDornDurchmesserErsteStufe= /^(0[1-9]|[1-9][0-9]|1[0-9][0-9])[.](0[0-9]|1[0-9]|[2-9][0-9])$/;
+                
+                let minDornDurchmesserErste= 15; 
+                let maxDornDurchmesserErste= 40;
+
+                if(patternDornDurchmesserErsteStufe.test(inputDornDurchmesserErsteStufe.value)){
+                    let dornDurchmesserErsteStufeStr = inputDornDurchmesserErsteStufe.value;
+                    let dornDurchmesserErsteStufeFloatInput = parseFloat(dornDurchmesserErsteStufeStr);
+                    console.log("dornDurchmesserErsteStufeFloatInput: "+dornDurchmesserErsteStufeFloatInput)
+
+                    if(dornDurchmesserErsteStufeFloatInput > maxDornDurchmesserErste || dornDurchmesserErsteStufeFloatInput < minDornDurchmesserErste){
+                        displayMessage_isError_isSuccess('Eingabe DornDurchmesser- ErsteStufe zu gross oder zu klein!', true);
+                        inputDornDurchmesserErsteStufe.value = '';     
+                    }
+                } 
+                else {
+                    displayMessage_isError_isSuccess('Ungültiges Format-Eingabe bei DornDurchmesser- ErsteStufe. Bitte geben Sie die Zahlen im richtigen Format ein.', true);
+                    inputDornDurchmesserErsteStufe.value = ''; 
+                }   
+            }
+
+            function validateDornDurchmesserZweiteStufe(inputDornDurchmesserZweiteStufe){
+                patternDornDurchmesserZweiteStufe= /^(0[1-9]|[1-9][0-9]|1[0-9][0-9])[.](0[0-9]|1[0-9]|[2-9][0-9])$/;
+                
+                let minDornDurchmesserZweite= 15; 
+                let maxDornDurchmesserZweite= 40;
+
+                //let dornDurchmesserErsteStufeStr = dornDurchmesserErsteStufe.value;
+                if(patternDornDurchmesserZweiteStufe.test(inputDornDurchmesserZweiteStufe.value)){
+                    let dornDurchmesserZweiteStufeStr = inputDornDurchmesserZweiteStufe.value;
+                    let dornDurchmesserZweiteStufeFloatInput = parseFloat(dornDurchmesserZweiteStufeStr);
+                    console.log("dornDurchmesserErsteStufeFloatInput: "+dornDurchmesserZweiteStufeFloatInput)
+
+                    if(dornDurchmesserZweiteStufeFloatInput > maxDornDurchmesserZweite || dornDurchmesserZweiteStufeFloatInput < minDornDurchmesserZweite){
+                        displayMessage_isError_isSuccess('Eingabe DornDurchmesser- ErsteStufe zu gross oder zu klein!', true);
+                        inputDornDurchmesserZweiteStufe.value = '';     
+                    }
+                } 
+                else {
+                    displayMessage_isError_isSuccess('Ungültiges Format-Eingabe bei DornDurchmesser- ZweiteStufe. Bitte geben Sie die Zahlen im richtigen Format ein.', true);
+                    inputDornDurchmesserZweiteStufe.value = ''; 
+                }   
+            }
+
+            function validateDornPositionZweiteStufe(inputDornPositionZweiteStufe){
+                console.log("bin validateDornPositionZweiteStufe")
+                let dornPositionZweiteStufeInput = inputDornPositionZweiteStufe.value;
+                if(dornPositionZweiteStufeInput > 99 || dornPositionZweiteStufeInput < 10){
+                    displayMessage_isError_isSuccess('Ungültiges Format-Eingabe bei Dornposition- ZweiteStufe. Bitte geben Sie die Zahlen im richtigen Format ein.', true);
+                    inputDornPositionZweiteStufe.value = '';
+                }
+            }
+
+            function validateFixlaenge(inputFixlaenge){
+                console.log("Bin validateFixlaenge");
+                let minFixlaenge = 30;
+                let maxFixlaenge = 2500;
+
+                if(inputFixlaenge.value < 30){
+                    displayMessage_isError_isSuccess('Fixlänge zu klein!', true);
+                    inputFixlaenge.value = ''; 
+                } else if(inputFixlaenge.value > 2500){
+                    displayMessage_isError_isSuccess('Fixlängel zu gross!', true);
+                    inputFixlaenge.value = ''; 
+                }
+            }
+            function validateAusgleichstueck(inputAusgleichstueck){
+                console.log("Bin validateAusgleichstueck");
+                let minAusgleichstueck = 1; 
+                let maxAusgleichstueck = 100;
+
+                if(inputAusgleichstueck.value < 1){
+                    displayMessage_isError_isSuccess('Ausgleichstück zu klein!', true);
+                    inputAusgleichstueck.value = ''; 
+                } else if(inputAusgleichstueck.value > 100){
+                    displayMessage_isError_isSuccess('Ausgleichstück zu gross!', true);
+                    inputAusgleichstueck.value = ''; 
+                }
+            }
+
+            function validateMehrfachlaenge(inputMehrfachlaenge){
+                console.log("Bin validateMehrfachlaenge");
+                let minMehrfachlaenge = 5000; 
+                let maxMehrfachlaenge = 13000;
+
+                if(inputMehrfachlaenge.value < 5000){
+                    displayMessage_isError_isSuccess('Mehrfachlänge zu klein!', true);
+                    inputMehrfachlaenge.value = ''; 
+                } else if(inputMehrfachlaenge.value > 13000){
+                    displayMessage_isError_isSuccess('Mehrfachlänge zu gross!', true);
+                    inputMehrfachlaenge.value = ''; 
+                }
+            }
+            function validateAnzahlFixlaengenProMehrfachlaenge(inputAnzahlFixlaengenProMehrfachlaenge){
+                console.log("Bin validateAnzahlFixlaengenProMehrfachlaenge");
+                let minAnzahlFixlaengenProMehrfachlaenge = 3; 
+                let maxAnzahlFixlaengenProMehrfachlaenge = 25;
+
+                if(inputAnzahlFixlaengenProMehrfachlaenge.value < minAnzahlFixlaengenProMehrfachlaenge){
+                    displayMessage_isError_isSuccess('Anzahl Fixlaengen pro Mehrfachlaenge zu klein!', true);
+                    inputAnzahlFixlaengenProMehrfachlaenge.value = ''; 
+                } else if(inputAnzahlFixlaengenProMehrfachlaenge.value > maxAnzahlFixlaengenProMehrfachlaenge){
+                    displayMessage_isError_isSuccess('Anzahl Fixlaengen pro Mehrfachlaenge zu gross!', true);
+                    inputAnzahlFixlaengenProMehrfachlaenge.value = ''; 
+                }
+            }
+
+            function validateProfileGekoppelt(inputProfileGekoppelt){
+                console.log("Bin validateProfileGekoppelt");
+                let minProfileGekoppelt = 1;
+                let maxProfileGekoppelt = 2;
+
+                if(inputProfileGekoppelt.value < minProfileGekoppelt){
+                    displayMessage_isError_isSuccess('Anzahl Profile-Gekoppelt zu klein!', true);
+                    inputProfileGekoppelt.value = ''; 
+                } else if(inputProfileGekoppelt.value > maxProfileGekoppelt){
+                    displayMessage_isError_isSuccess('Anzahl Profile-Gekoppelt zu gross!', true);
+                    inputProfileGekoppelt.value = ''; 
+                } 
+            }
+
+            let eckenPositionMin = 10;
+            let eckenPositionMax = 2500;
+            function validateEckenPositionMinMax1(inputEckenPosition){
+                if(inputEckenPosition.value < eckenPositionMin){
+                    displayMessage_isError_isSuccess('Position zu klein!', true);
+                    inputEckenPosition.value = ''; 
+                } else if(inputEckenPosition.value > eckenPositionMax){
+                    displayMessage_isError_isSuccess('Position zu gross!', true);
+                    inputEckenPosition.value = ''; 
+                }
+            }
+            function validateEckenPositionMinMax2(inputEckenPosition){
+                if(inputEckenPosition.value < eckenPositionMin){
+                    displayMessage_isError_isSuccess('Position zu klein!', true);
+                    inputEckenPosition.value = ''; 
+                } else if(inputEckenPosition.value > eckenPositionMax){
+                    displayMessage_isError_isSuccess('Position zu gross!', true);
+                    inputEckenPosition.value = ''; 
+                }
+            }
+            function validateEckenPositionMinMax3(inputEckenPosition){
+                if(inputEckenPosition.value < eckenPositionMin){
+                    displayMessage_isError_isSuccess('Position zu klein!', true);
+                    inputEckenPosition.value = ''; 
+                } else if(inputEckenPosition.value > eckenPositionMax){
+                    displayMessage_isError_isSuccess('Position zu gross!', true);
+                    inputEckenPosition.value = ''; 
+                }
+            }
+            function validateEckenPositionMinMax4(inputEckenPosition){
+                if(inputEckenPosition.value < eckenPositionMin){
+                    displayMessage_isError_isSuccess('Position zu klein!', true);
+                    inputEckenPosition.value = ''; 
+                } else if(inputEckenPosition.value > eckenPositionMax){
+                    displayMessage_isError_isSuccess('Position zu gross!', true);
+                    inputEckenPosition.value = ''; 
+                }
+            }
+
+            function saveDataRecipe(){
+                console.log("bin saveDataRecipe");
+            }
+
+            function saveDataMehrfachlaengenDaten(){
+                console.log("bin saveDataMehrfachlaengenDaten");
+
+                let fixlaenge = document.getElementById('fixlaenge').value;
+                console.log("fixlaenge: "+ fixlaenge);
+                let ausgleichstueck = document.getElementById('ausgleichstueck').value;
+                console.log("ausgleichstueck: "+ ausgleichstueck);
+                let mehrfachlaenge = document.getElementById('mehrfachlaenge').value;
+                console.log("mehrfachlaenge: "+ mehrfachlaenge);
+                let anzahlFixlaengenProMehrfachlaenge = document.getElementById('anzahlFixlaengenProMehrfachlaenge').value;
+                console.log("anzahlFixlaengenProMehrfachlaenge: "+ anzahlFixlaengenProMehrfachlaenge);
+
+                if( fixlaenge === '' || ausgleichstueck === '' || mehrfachlaenge === '' || anzahlFixlaengenProMehrfachlaenge === ''){
+                    alert('Für "Weiter4" müssen die Felder richtig ausgefüllt werden!')
+                }
+                else {
+                    document.getElementById('fixlaenge').readOnly = true;
+                    document.getElementById('fixlaenge').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('fixlaenge').style.color = '#000000';  
+                    fixlaengeEnde = fixlaenge;
+                    document.getElementById('ausgleichstueck').readOnly = true;
+                    document.getElementById('ausgleichstueck').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('ausgleichstueck').style.color = '#000000'; 
+
+                    document.getElementById('mehrfachlaenge').readOnly = true;
+                    document.getElementById('mehrfachlaenge').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('mehrfachlaenge').style.color = '#000000'; 
+
+                    document.getElementById('anzahlFixlaengenProMehrfachlaenge').readOnly = true;
+                    document.getElementById('anzahlFixlaengenProMehrfachlaenge').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('anzahlFixlaengenProMehrfachlaenge').style.color = '#000000';                     
+
+                    document.getElementById('groupMehrfachlaengenDatenButton').style.display = 'none';
+
+                    document.getElementById('labelMindestGutanteil').style.display = 'block';
+                    document.getElementById('mindestGutanteil').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('mindestGutanteil').style.color = '#000000';
+                    document.getElementById('mindestGutanteil').style.display = 'block';
+                    document.getElementById('labelProfileGekoppelt').style.display = 'block'; 
+                    document.getElementById('profileGekoppelt').style.display = 'block';
+                    document.getElementById('groupRohrWerteButton').style.display = 'block';
+                }
+            }
+
+            function saveDataRohrWerte(){
+                console.log("bin saveDataRohrWerte");
+
+                let mindestGutanteil = document.getElementById('mindestGutanteil').value;
+                console.log("mindestGutanteil: "+ mindestGutanteil);
+                let profileGekoppelt = document.getElementById('profileGekoppelt').value;
+                console.log("profileGekoppelt: "+ profileGekoppelt);
+
+                if(mindestGutanteil === '' || profileGekoppelt === ''){
+                    alert('Für "Weiter4.5" müssen die Felder richtig ausgefüllt werden!');
+                } else{
+                    document.getElementById('mindestGutanteil').readOnly = true;
+                    document.getElementById('mindestGutanteil').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('mindestGutanteil').style.color = '#000000';   
+
+                    document.getElementById('profileGekoppelt').readOnly = true;
+                    document.getElementById('profileGekoppelt').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('profileGekoppelt').style.color = '#000000';
+
+                    document.getElementById('groupRohrWerteButton').style.display = 'none'; 
+
+                    document.getElementById('labelObereToleranz').style.display = 'block';
+                    document.getElementById('obereToleranz').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('obereToleranz').style.color = '#000000';
+                    document.getElementById('obereToleranz').style.display = 'block';
+                    document.getElementById('labelUntereToleranz').style.display = 'block';
+                    document.getElementById('untereToleranz').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('untereToleranz').style.color = '#000000';
+                    document.getElementById('untereToleranz').style.display = 'block';
+
+                    document.getElementById('mindestGutanteil').style.display = 'block'; 
+                    document.getElementById('profileGekoppelt').style.display = 'block'; 
+                    document.getElementById('groupStandartWerteButton').style.display = 'block';  
+                }
+            }
+
+            function saveDataStandartWerte(){
+                console.log("bin saveDataStandartWerte")
+
+                let obereToleranz = document.getElementById('obereToleranz').value;
+                console.log("obereToleranz: "+ obereToleranz);
+                let untereToleranz = document.getElementById('untereToleranz').value;
+                console.log("untereToleranz: "+ untereToleranz);
+
+                if( obereToleranz === '' || untereToleranz === '' ){
+                    alert('Für "Weiter5" müssen die Felder richtig ausgefüllt werden!');
+                }
+                else {
+                    document.getElementById('obereToleranz').readOnly = true;
+                    document.getElementById('obereToleranz').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('obereToleranz').style.color = '#000000';   
+
+                    document.getElementById('untereToleranz').readOnly = true;
+                    document.getElementById('untereToleranz').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('untereToleranz').style.color = '#000000';     
+
+                    document.getElementById('groupStandartWerteButton').style.display = 'none';
+
+                    document.getElementById('ecke0').style.display = 'block';
+                    document.getElementById('wanddickeEcke0').value = wanddickeBig;
+                    //document.getElementById('wanddickeEcke0').style.backgroundColor = '#E8F0FE';
+                    //document.getElementById('positionEcke0').value = 0;
+
+                    document.getElementById('ecke1').style.display = 'block';
+                    document.getElementById('wanddickeEcke1').value = wanddickeBig;
+                    //document.getElementById('wanddickeEcke1').style.backgroundColor = '#E8F0FE';
+
+                    document.getElementById('ecke2').style.display = 'block';
+                    document.getElementById('wanddickeEcke2').value = wanddickeSmall;
+                    //document.getElementById('wanddickeEcke2').style.backgroundColor = '#E8F0FE';
+
+                    document.getElementById('ecke3').style.display = 'block';
+                    document.getElementById('wanddickeEcke3').value = wanddickeSmall;
+
+                    document.getElementById('ecke4').style.display = 'block';
+                    document.getElementById('wanddickeEcke4').value = wanddickeBig;
+
+                    document.getElementById('eckeEnde').style.display = 'block';
+                    document.getElementById('wanddickeEckeEnde').value = wanddickeBig;
+                    document.getElementById('positionEckeEnde').value = fixlaengeEnde;
+
+
+                    document.getElementById('groupEckenListeButton').style.display = 'block';
+                }
+            }
+
+            function saveDataEckenListe(){
+                console.log("bin saveDataEckenListe")
+
+                let positionEckeInputsArr = [
+                document.getElementById('positionEcke0'),
+                document.getElementById('positionEcke1'),
+                document.getElementById('positionEcke2'),
+                document.getElementById('positionEcke3'),
+                document.getElementById('positionEcke4'),
+                document.getElementById('positionEckeEnde')
+                ];
+
+                let isPositionEckeInputsArrFilled = positionEckeInputsArr.every(input => input.value.trim() !== '');
+
+                if (!isPositionEckeInputsArrFilled) {
+                    alert('Für "Weiter6" müssen die Felder richtig ausgefüllt werden!');
+                } 
+                else {
+                    let isValidOrder = true;
+                    let isDifferenceValid = true;
+                    let isDistanceConsistent = true;
+
+                    for (let i = 1; i < positionEckeInputsArr.length; i++) {
+                        let current = parseFloat(positionEckeInputsArr[i].value);
+                        let previous = parseFloat(positionEckeInputsArr[i - 1].value);
+
+                        if (current <= previous) {
+                            isValidOrder = false;    
+                            positionEckeInputsArr[i].value = '';                    
+                            break; 
+                        }
+
+                        if (current - previous < 10) {
+                            isDifferenceValid = false;
+                            positionEckeInputsArr[i].value = '';
+                            positionEckeInputsArr[i - 1].value = '';
+                            break;
+                        }
+
+                        if (i === 2 && current - previous !== parseFloat(positionEckeInputsArr[i + 2].value - positionEckeInputsArr[i + 1].value)) {
+                            isDistanceConsistent = false;
+                            break;
+                        }
+                    }
+
+                    if (!isValidOrder) {
+                        alert('Die Position ist falsch oder muss grösser sein als die vorherige!');
+                    } else if (!isDifferenceValid) {
+                        alert('Die nachfolgenden Eingaben müssen mindestens um 10 höher sein als die vorherige!');    
+                    } else if (!isDistanceConsistent) {
+                        alert('Der Abstand zwischen position1 und position2 sollte gleich dem Abstand zwischen position3 und position4 sein!');
+                    } else {
+                        //let zwischenWanddicke34 = '';
+                        let zwischenPosition34 = parseFloat(document.getElementById('positionEcke3').value)+2;
+                        console.log("zwischenPosition34: " + zwischenPosition34);
+
+                        //zwischenWanddicke = wanddickeBig - wanddickeSmall;
+                        let diffWanddicke = wanddickeBig - wanddickeSmall;//roundToTenth(wanddickeBig - wanddickeSmall);
+                        let zwischenWanddicke34 = wanddickeSmall + roundToTenth(diffWanddicke / 2);
+                        //let zwischenWanddicke34 = wanddickeSmall + (roundToTenth(wanddickeBig - wanddickeSmall) / 2) ;
+                        console.log("zwischenWanddicke34: " + zwischenWanddicke34);
+
+                        document.getElementById('wanddickeEcke3Zwischen4').value = zwischenWanddicke34;
+                        document.getElementById('wanddickeEcke3Zwischen4').style.backgroundColor = 'lightblue';
+                        document.getElementById('wanddickeEcke3Zwischen4').readOnly = true;
+                        document.getElementById('positionEcke3Zwischen4').value = zwischenPosition34;
+                        document.getElementById('positionEcke3Zwischen4').style.backgroundColor = 'lightblue';
+                        document.getElementById('positionEcke3Zwischen4').readOnly = true;
+                        document.getElementById('ecke3Zwischen4').style.display = 'block';
+
+                        //document.getElementById('positionEcke0').readOnly = true;
+                        document.getElementById('wanddickeEcke0').readOnly = true;
+                        document.getElementById('wanddickeEcke0').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('wanddickeEcke0').style.color = '#000000';                         
+                        document.getElementById('positionEcke0').readOnly = true;
+                        document.getElementById('positionEcke0').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('positionEcke0').style.color = '#000000';                     
+
+                        document.getElementById('wanddickeEcke1').readOnly = true;
+                        document.getElementById('wanddickeEcke1').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('wanddickeEcke1').style.color = '#000000'; 
+                        document.getElementById('positionEcke1').readOnly = true;
+                        document.getElementById('positionEcke1').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('positionEcke1').style.color = '#000000';                        
+
+                        document.getElementById('wanddickeEcke2').readOnly = true;
+                        document.getElementById('wanddickeEcke2').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('wanddickeEcke2').style.color = '#000000'; 
+                        document.getElementById('positionEcke2').readOnly = true;
+                        document.getElementById('positionEcke2').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('positionEcke2').style.color = '#000000';                        
+                        
+                        document.getElementById('wanddickeEcke3').readOnly = true;
+                        document.getElementById('wanddickeEcke3').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('wanddickeEcke3').style.color = '#000000';                         
+                        document.getElementById('positionEcke3').readOnly = true;
+                        document.getElementById('positionEcke3').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('positionEcke3').style.color = '#000000';                        
+                        
+                        document.getElementById('wanddickeEcke4').readOnly = true;
+                        document.getElementById('wanddickeEcke4').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('wanddickeEcke4').style.color = '#000000'; 
+                        document.getElementById('positionEcke4').readOnly = true;
+                        document.getElementById('positionEcke4').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('positionEcke4').style.color = '#000000';
+
+                        document.getElementById('wanddickeEckeEnde').readOnly = true;
+                        document.getElementById('wanddickeEckeEnde').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('wanddickeEckeEnde').style.color = '#000000';    
+                        document.getElementById('positionEckeEnde').readOnly = true;
+                        document.getElementById('positionEckeEnde').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('positionEckeEnde').style.color = '#000000';                        
+                        
+                        document.getElementById('groupEckenListeButton').style.display = 'none';
+                        document.getElementById('groupSaveRecipeButton').style.display = 'block';
+                        //document.getElementById('groupSaveRecipeButton').style.border = '1px solid green';
+                        //document.getElementById('groupSaveRecipeButton').style.backgroundColor = 'lightgreen';
+                        //document.getElementById('positionEckeEnde')
+
+
+
+                        //- //- document.getElementById('ecke4').style.display = 'block';
+                        //- //- document.getElementById('wanddickeEcke4').value = wanddickeBig;
+                        //- //- document.getElementById('rohrInnenDurchmesserLetzterZugBerechnet').style.backgroundColor = 'lightblue';
+                        //-     div(class="form__group" id="ecke3Zwischen4" style="display: none;") 3-4 Zwischenecke 3-4 
+                        //-         label#labelWanddickeEcke3Zwischen4(class="form__label", for="wanddickeEcke3Zwischen4") 3-4 - Zwischenwanddicke - 3-4
+                        //-         input#wanddickeEcke3Zwischen4(class="form__input", type="number", value=22, required="required", readOnly = true )                               
+                        //-         br
+                        //-         label#labelPositionEcke3Zwischen4(class="form__label", for="positionEcke3Zwischen4") 3-4 - Zwischenposition - 3-4
+                        //-         input#positionEcke3Zwischen4(class="form__input", type="number", value=33, min=10, max=2500, required="required", onblur="validateEckenPositionMinMax3(this)")
+                        //-         br    
+                        //alert('Gut');
+                        //alert('Bitte alle Eingaben Kontrollieren')
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        displayMessage_isError_isSuccess('Bitte alle Eingaben nochmals kontrollieren!', false);
+                    }
+                }
+            }
+
+            function roundToTenth(number) {
+                return Math.ceil(number * 10) / 10;
+            }
+
+            function saveDataDornStufenWerte(){
+                console.log("bin saveDataDornStufenWerte")
+
+                let dornPositionErsteStufe = document.getElementById('dornPositionErsteStufe').value;
+                console.log("dornPositionErsteStufe: "+dornPositionErsteStufe);
+                let dornDurchmesserErsteStufeValue = document.getElementById('dornDurchmesserErsteStufe').value;
+                console.log("dornDurchmesserErsteStufe: "+dornDurchmesserErsteStufe);
+                let dornDurchmesserZweiteStufeValue = document.getElementById('dornDurchmesserZweiteStufe').value;
+                console.log("dornDurchmesserZweiteStufe: "+dornDurchmesserZweiteStufe);
+                let dornPositionZweiteStufe = document.getElementById('dornPositionZweiteStufe').value;
+                console.log("dornPositionZweiteStufe: "+dornPositionZweiteStufe);
+
+                if( dornPositionErsteStufe === '' || dornDurchmesserErsteStufeValue === '' || dornDurchmesserZweiteStufeValue === '' || dornPositionZweiteStufe === ''){
+                    alert('Für "Weiter3" müssen die Felder richtig ausgefüllt werden!')
+                }
+                else {
+                    let dornDurchmesserErsteStufeValueFoat = parseFloat(dornDurchmesserErsteStufeValue);
+                    let dornDurchmesserZweiteStufeValueFoat = parseFloat(dornDurchmesserZweiteStufeValue);
+
+                    if(dornDurchmesserZweiteStufeValueFoat <= dornDurchmesserErsteStufeValueFoat){
+                        displayMessage_isError_isSuccess('Dorndurchmesser sind falsch!', true);
+                        document.getElementById('dornDurchmesserErsteStufe').value = ''; 
+                        document.getElementById('dornDurchmesserZweiteStufe').value = '';
+                    } 
+                    else{
+                        document.getElementById('dornDurchmesserErsteStufe').readOnly = true;
+                        document.getElementById('dornDurchmesserErsteStufe').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('dornDurchmesserErsteStufe').style.color = '#000000';
+
+                        document.getElementById('dornPositionErsteStufe').readOnly = true;
+                        document.getElementById('dornPositionErsteStufe').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('dornPositionErsteStufe').style.color = '#000000';
+
+                        document.getElementById('dornDurchmesserZweiteStufe').readOnly = true;
+                        document.getElementById('dornDurchmesserZweiteStufe').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('dornDurchmesserZweiteStufe').style.color = '#000000';
+
+                        document.getElementById('dornPositionZweiteStufe').readOnly = true;
+                        document.getElementById('dornPositionZweiteStufe').style.backgroundColor = '#E8F0FE';
+                        document.getElementById('dornPositionZweiteStufe').style.color = '#000000';                        
+
+                        document.getElementById('groupDornStufenWerte1Button').style.display = 'none';
+                        //- document.getElementById('nextButtonDornStufenWerte1').style.display = 'none';
+                        //- document.getElementById('cancelButtonDornStufenWerte1').style.display = 'none';
+
+                        document.getElementById('labelFixlaenge').style.display = 'block';
+                        document.getElementById('fixlaenge').style.display = 'block';
+                        document.getElementById('labelAusgleichstueck').style.display = 'block';
+                        document.getElementById('ausgleichstueck').style.display = 'block';
+                        document.getElementById('labelMehrfachlaenge').style.display = 'block';
+                        document.getElementById('mehrfachlaenge').style.display = 'block';
+                        document.getElementById('labelAnzahlFixlaengenProMehrfachlaenge').style.display = 'block';
+                        document.getElementById('anzahlFixlaengenProMehrfachlaenge').style.display = 'block';
+
+                        document.getElementById('groupMehrfachlaengenDatenButton').style.display = 'block'
+                    }
+                }
+            }
+
+            function saveDataDornWerte1(){
+                    console.log("bin saveDataDornWerte1")
+
+                    let rohrAussenDurchmesserLetzterZug = document.getElementById('rohrAussenDurchmesserLetzterZug').value;
+                    console.log("rohrAussenDurchmesserLetzterZug: "+rohrAussenDurchmesserLetzterZug);
+
+                    let rohrWandDickeAussenDurchmesserLetzterZug = document.getElementById('rohrWandDickeAussenDurchmesserLetzterZug').value;
+                    console.log("rohrWandDickeAussenDurchmesserLetzterZug: "+rohrWandDickeAussenDurchmesserLetzterZug);
+
+                    let angel = document.getElementById('angel').value;
+                    console.log("angel: "+angel);    
+                if(rohrAussenDurchmesserLetzterZug === '' || rohrWandDickeAussenDurchmesserLetzterZug === '' || angel === ''){
+                    alert('Für "Weiter2" müssen die Felder richtig ausgefüllt werden!')
+                }
+                else {
+                    let zahlRohrAussenDurchmesserLetzterZug = parseFloat(rohrAussenDurchmesserLetzterZug);
+                    console.log("zahlRohrAussenDurchmesserLetzterZug: ", zahlRohrAussenDurchmesserLetzterZug);
+                    let zahlRohrWandDickeAussenDurchmesserLetzterZug = parseFloat(rohrWandDickeAussenDurchmesserLetzterZug);
+                    console.log("zahlRohrWandDickeAussenDurchmesserLetzterZug: ", zahlRohrWandDickeAussenDurchmesserLetzterZug);
+                    let rohrInnenDurchmesserLetzterZugBerrechnet = zahlRohrAussenDurchmesserLetzterZug - (2 * zahlRohrWandDickeAussenDurchmesserLetzterZug)
+                    let rohrInnenDurchmesserLetzterZugBerrechnetGerundet = parseFloat(rohrInnenDurchmesserLetzterZugBerrechnet.toFixed(2));
+                    let rohrInnenDurchmesserLetzterZugBerrechnetGerundetZweiStellenStr = rohrInnenDurchmesserLetzterZugBerrechnetGerundet.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                    console.log("rohrInnenDurchmesserLetzterZugBerrechnetGerundetZweiStellenStr: (--> Muss umgewandelt werden zu einer Zahl) ", rohrInnenDurchmesserLetzterZugBerrechnetGerundetZweiStellenStr);
+
+                    document.getElementById('labelRohrInnenDurchmesserLetzterZugBerechnet').style.display = 'block';
+                    document.getElementById('rohrInnenDurchmesserLetzterZugBerechnet').value = Number(rohrInnenDurchmesserLetzterZugBerrechnetGerundetZweiStellenStr);
+                    document.getElementById('rohrInnenDurchmesserLetzterZugBerechnet').readOnly = true;
+                    document.getElementById('rohrInnenDurchmesserLetzterZugBerechnet').style.backgroundColor = 'lightblue';
+                    document.getElementById('rohrInnenDurchmesserLetzterZugBerechnet').style.display = 'block';
+
+                    console.log("artikelName XXX: "+ artikelName);
+                    let artikelNameSplitXArr = artikelName.split('x');
+                    rohrAussenDurchmesserTDTZug = artikelNameSplitXArr[0];
+                    console.log("rohrAussenDurchmesserTDTZug: "+rohrAussenDurchmesserTDTZug)
+                    document.getElementById('rohrAussenDurchmesserTDTZug').value = rohrAussenDurchmesserTDTZug;
+
+                    document.getElementById('labelRohrAussenDurchmesserTDTZug').style.display = 'block';      
+                    document.getElementById('rohrAussenDurchmesserTDTZug').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('rohrAussenDurchmesserTDTZug').style.color = '#000000';
+                    document.getElementById('rohrAussenDurchmesserTDTZug').readOnly = true;
+                    document.getElementById('rohrAussenDurchmesserTDTZug').style.display = 'block';
+
+                    document.getElementById('rohrAussenDurchmesserLetzterZug').readOnly = true;
+                    document.getElementById('rohrAussenDurchmesserLetzterZug').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('rohrAussenDurchmesserLetzterZug').style.color = '#000000';
+
+                    document.getElementById('rohrWandDickeAussenDurchmesserLetzterZug').readOnly = true;
+                    document.getElementById('rohrWandDickeAussenDurchmesserLetzterZug').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('rohrWandDickeAussenDurchmesserLetzterZug').style.color = '#000000';
+
+                    document.getElementById('angel').readOnly = true;
+                    document.getElementById('angel').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('angel').style.color = '#000000';
+
+                    document.getElementById('groupDornWerte1Button').style.display = 'none';
+
+                    //- document.getElementById('nextButtonDornWerte1').style.display = 'none';
+                    //- document.getElementById('cancelButtonDornWerte1').style.display = 'none';
+
+                            //-                div(class="form__group" id="groupDornWerte1Button" style="display: none;")
+                            //- //- button.btn.btn--green(id="nextButtonDornWerte1" type="button" onclick="saveDataDornWerte1()" style="display: none;") Next
+                            //- //- a.btn-space
+                            //- //- //(id="spaceDornWerte1" style="display: none;")
+                            //- //- a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonDornWerte1" style="display: none;") Cancel
+                            //- button.btn.btn--green(id="nextButtonDornWerte1" type="button" onclick="saveDataDornWerte1()") Next
+                            //- a.btn-space
+                            //- a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonDornWerte1") Cancel
+
+
+                    document.getElementById('labelDornDurchmesserErsteStufe').style.display = 'block';
+                    document.getElementById('dornDurchmesserErsteStufe').style.display = 'block';
+
+                    document.getElementById('labelDornPositionErsteStufe').style.display = 'block';
+                    document.getElementById('dornPositionErsteStufe').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('dornPositionErsteStufe').style.color = '#000000';                      
+                    document.getElementById('dornPositionErsteStufe').style.display = 'block';
+                    document.getElementById('labelDornDurchmesserZweiteStufe').style.display = 'block';
+                    document.getElementById('dornDurchmesserZweiteStufe').style.display = 'block';
+                    document.getElementById('labelDornPositionZweiteStufe').style.display = 'block';
+                    document.getElementById('dornPositionZweiteStufe').style.display = 'block';
+
+                    document.getElementById('groupDornStufenWerte1Button').style.display = 'block';
+
+                    //- document.getElementById('nextButtonDornStufenWerte1').style.display = 'block';
+                    //- document.getElementById('cancelButtonDornStufenWerte1').style.display = 'block';
+
+                            //- div(class="form__group" id="groupDornStufenWerte1Button" style="display: none;")    
+                            //- button.btn.btn--green(id="nextButtonDornStufenWerte1" type="button" onclick="saveDataDornStufenWerte()") Next
+                            //- a.btn-space
+                            //- a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonDornWerte1") Cancel
+                }
+            }
+
+            let benutzerID = document.getElementById('benutzerID').value;
+            console.log("benutzerID: " + benutzerID);
+            let benutzerVorName = '';
+            let benutzerNachName = '';
+            let ziehGeschwindigkeit = '';
+
+            function saveDataKopfDaten() {
+                console.log("bin saveDataKopfdaten")
+                artikelNummer = document.getElementById('artikelNummer').value;
+                console.log("artikelNummer: "+ artikelNummer)
+                artikelName = document.getElementById('artikelName').value;
+                console.log("artikelName: "+ artikelName)
+                ziehGeschwindigkeit = document.getElementById('ziehGeschwindigkeit').value;
+                console.log("ziehGeschwindigkeit: "+ ziehGeschwindigkeit)
+
+                benutzerVorName = document.getElementById('benutzerVorName').value;
+                console.log("benutzerVorName: "+ benutzerVorName)
+                benutzerNachName = document.getElementById('benutzerNachName').value;
+                console.log("benutzerNachName: "+ benutzerNachName)
+
+                if(artikelNummer === '' || artikelName === '' || ziehGeschwindigkeit === '' || benutzerVorName === '' || benutzerNachName === ''){
+                    alert('Für "Weiter" müssen die Felder richtig ausgefüllt werden!')
+                }
+                else {
+                    document.getElementById('artikelNummer').readOnly = true;
+                    document.getElementById('artikelNummer').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('artikelNummer').style.color = '#000000';
+
+                    document.getElementById('artikelName').readOnly = true;
+                    document.getElementById('artikelName').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('artikelName').style.color = '#000000';
+                
+                    document.getElementById('ziehGeschwindigkeit').readOnly = true;
+                    document.getElementById('ziehGeschwindigkeit').style.backgroundColor = '#E8F0FE';
+                    document.getElementById('ziehGeschwindigkeit').style.color = '#000000';
+
+                    //- document.getElementById('benutzerVorName').readOnly = true;
+                    //- document.getElementById('benutzerVorName').style.backgroundColor = '#E8F0FE';
+                    //- document.getElementById('benutzerVorName').style.color = '#000000';
+
+                    //- document.getElementById('benutzerNachName').readOnly = true;
+                    //- document.getElementById('benutzerNachName').style.backgroundColor = '#E8F0FE';
+                    //- document.getElementById('benutzerNachName').style.color = '#000000';
+
+                    document.getElementById('nextButtonKopfdaten').style.display = 'none';
+                    document.getElementById('cancelButtonKopfdaten').style.display = 'none';
+
+                    document.getElementById('labelRohrAussenDurchmesserLetzterZug').style.display = 'block';
+                    document.getElementById('rohrAussenDurchmesserLetzterZug').style.display = 'block';
+                    document.getElementById('labelRohrWandDickeAussenDurchmesserLetzterZug').style.display = 'block';
+                    document.getElementById('rohrWandDickeAussenDurchmesserLetzterZug').style.display = 'block';
+                    document.getElementById('labelAngel').style.display = 'block';
+                    document.getElementById('angel').style.display = 'block';
+
+                    document.getElementById('groupDornWerte1Button').style.display = 'block';
+
+                    //nextbuoondornwerte4
+                    //- document.getElementById('nextButtonDornWerte1').style.display = 'block';
+                    //- document.getElementById('cancelButtonDornWerte1').style.display = 'block'; 
+                            //-                     button.btn.btn--green(id="nextButtonDornWerte1" type="button" onclick="saveDataDornWerte1()" style="display: none;") Next
+                            //- a.btn-space
+                            //- a.btn.btn--small.btn--gray(href=`/api/v1/createRecipeOverview` id="cancelButtonDornWerte1" style="display: none;") Cancel
+                }
+            }
+
+            //- document.addEventListener('DOMContentLoaded', function() {
+            //-     var benutzerVorName = document.getElementById('benutzerVorName');
+
+            //-     if (benutzerVorName) {
+            //-         var wert = benutzerVorName.value;
+            //-         console.log(wert);
+            //-     } else {
+            //-         console.error("Element mit ID 'benutzerVorName' nicht gefunden");
+            //-     }
+            //- });

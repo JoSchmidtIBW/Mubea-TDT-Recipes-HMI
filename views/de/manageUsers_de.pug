@@ -1,0 +1,49 @@
+extends base
+
+block content
+    main.main
+        table#manageUsersTable.manageUsersTable.table
+            thead
+                tr
+                    th ID
+                    th Mitarbeiter-<br>Nummer
+                        button-upDown
+                            spam.arrow-up
+                        button-upDown
+                            spam.arrow-down
+                    th Nachname
+                    th Vorname
+                    th Geburtsdatum
+                    th Geschlecht
+                    th Sprache
+                    th Beruf
+                    th Foto
+                    th E-Mail-Adresse
+                    th Rolle
+                    th Abteilung(en)
+                    th Passwort
+                    th Erstellt am
+                    th Bearbeiten
+                tbody
+                    each user in data
+                        tr
+                            td= user._id
+                            td= user.employeeNumber
+                            td= user.lastName
+                            td= user.firstName
+                            td= user.birthDate
+                            td= user.gender
+                            td= user.language
+                            td= user.professional
+                            td= user.photo
+                            td= user.email
+                            td= user.role
+                            td= user.department
+                            td= user.password
+                            td= user.createdAt
+                            td
+
+        br
+        br
+
+        a.btn.btn--small.btn--green(href="/api/v1/createUser") Neuen Benutzer erstellen
